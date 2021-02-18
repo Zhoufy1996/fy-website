@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { ArticleModule } from './article/article.module';
 import { ArticleEntity } from './article/article.entity';
+import { LeetcodeModule } from './leetcode/leetcode.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ArticleEntity } from './article/article.entity';
     }),
     UserModule,
     ArticleModule,
+    LeetcodeModule,
   ],
 })
 export class AppModule {}
