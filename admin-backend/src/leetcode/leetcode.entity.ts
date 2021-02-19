@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/shared/entity/base.entity';
 import { Column, Entity } from 'typeorm';
 
-enum Level {
+export enum Level {
   SIMPLE = 'simple',
   MEDIUM = 'medium',
   DIFFICULTY = 'difficulty',
@@ -30,6 +30,12 @@ export class LeetcodeEntity extends BaseEntity {
   title: string;
 
   @Column({
+    length: 300,
+    name: 'title_slug',
+  })
+  titleSlug: string;
+
+  @Column({
     type: 'enum',
     enum: Level,
   })
@@ -37,11 +43,14 @@ export class LeetcodeEntity extends BaseEntity {
 
   @Column({
     name: 'question_content',
+    type: 'longtext',
+    nullable: true,
   })
   questionContent: string;
 
   @Column({
     type: 'simple-array',
+    nullable: true,
   })
   tags: string[];
 
@@ -52,7 +61,9 @@ export class LeetcodeEntity extends BaseEntity {
   })
   status: QuestionStatus;
 
-  @Column()
+  @Column({
+    default: '',
+  })
   alalysis: string;
 
   @Column({
@@ -62,9 +73,14 @@ export class LeetcodeEntity extends BaseEntity {
   })
   language: CodeLanguage;
 
-  @Column()
-  codes: string[];
-
-  @Column()
+  @Column({
+    default: '',
+  })
   description: string;
+
+  @Column({
+    type: 'simple-array',
+    nullable: true,
+  })
+  codes: string[];
 }

@@ -16,16 +16,16 @@ interface HotInfo {
 }
 
 interface translationInfo {
-  questionId: number;
+  questionId: string;
   title: string; // title
 }
 
-interface QuestionInfo {
+export interface QuestionInfo {
   translatedContent: string;
   topicTags: {
     translatedName: string;
     slug: string;
-  };
+  }[];
 }
 
 export const getHotInfo = async () => {
