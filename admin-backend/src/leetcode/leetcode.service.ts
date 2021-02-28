@@ -6,7 +6,13 @@ import {
   getTranslationInfo,
 } from 'src/scripts/leetcode';
 import { Repository } from 'typeorm';
-import { LeetcodeEntity, Level } from './leetcode.entity';
+import { SaveLeetcodeDto } from './leetcode.dto';
+import {
+  CodeLanguage,
+  LeetcodeEntity,
+  Level,
+  QuestionStatus,
+} from './leetcode.entity';
 
 const LevelMap = {
   1: Level.SIMPLE,
@@ -87,6 +93,28 @@ export class LeetcodeService {
 
     await queryOne();
     return result;
+  }
+
+  async save(question: SaveLeetcodeDto) {
+    const data = new LeetcodeEntity();
+    data.id = question.id;
+    data.status = question.status;
+    data.alalysis = question.alalysis;
+    data.language = question.language;
+    data.description = question.description;
+    data.codes = question.codes;
+    return this.leetcodeRepository.save(data);
+  }
+
+  async reset(id: number) {
+    const data = new LeetcodeEntity();
+    data.id = id;
+    data.status = QuestionStatus.UNDONE;
+    data.alalysis = '';
+    data.language = CodeLanguage.TYPESCRIPT;
+    data.description = '';
+    data.codes = [];
+    return this.leetcodeRepository.save(data);
   }
 
   async batchSave(data: LeetcodeEntity[]) {

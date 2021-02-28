@@ -38,12 +38,6 @@ export class DeleteArticleDto {
   id: number;
 }
 
-enum FindArticleStatus {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  ALL = 'all',
-}
-
 export class FindArticleDto {
   @IsString()
   keyword: string;

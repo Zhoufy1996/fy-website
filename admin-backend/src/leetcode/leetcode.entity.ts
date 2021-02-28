@@ -7,12 +7,12 @@ export enum Level {
   DIFFICULTY = 'difficulty',
 }
 
-enum QuestionStatus {
+export enum QuestionStatus {
   UNDONE = 'undone',
   DONE = 'done',
 }
 
-enum CodeLanguage {
+export enum CodeLanguage {
   JAVASCRIPT = 'javascript',
   TYPESCRIPT = 'typescript',
 }

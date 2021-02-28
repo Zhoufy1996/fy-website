@@ -6,6 +6,7 @@ import { ArticleModule } from './article/article.module';
 import { ArticleEntity } from './article/article.entity';
 import { LeetcodeModule } from './leetcode/leetcode.module';
 import { LeetcodeEntity } from './leetcode/leetcode.entity';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { LeetcodeEntity } from './leetcode/leetcode.entity';
     UserModule,
     ArticleModule,
     LeetcodeModule,
+    TaskModule,
   ],
 })
 export class AppModule {}
