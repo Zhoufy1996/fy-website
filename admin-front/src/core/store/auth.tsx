@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { createContainer } from 'unstated-next';
-import { loginAsync, verfityTokenAsync } from '../service/login';
+import { loginAsync, verfityTokenAsync } from '../services/login';
 
 interface loginValues {
     username: string;
@@ -28,6 +28,7 @@ const Auth = () => {
             setLogin(true);
         } catch (e) {
             setLogin(false);
+            return Promise.reject(e);
         }
     }, []);
 

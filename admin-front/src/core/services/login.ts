@@ -13,5 +13,5 @@ export const loginAsync = (values: LoginAsyncValues): Promise<{ accessToken: str
 };
 
 export const verfityTokenAsync = (): Promise<void> => {
-    return service.post('verfitytoken');
+    return service.post('user/verifytoken');
 };
