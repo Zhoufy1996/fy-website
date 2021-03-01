@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 declare const module: any;
 
@@ -16,6 +17,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  app.use(cookieParser());
+
   const options = new DocumentBuilder()
     .setTitle('文档')
     .setDescription('The cats API description')
@@ -24,7 +27,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(4000);
 
   if (module.hot) {
     module.hot.accept();

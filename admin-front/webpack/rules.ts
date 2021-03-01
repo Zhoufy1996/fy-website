@@ -21,12 +21,42 @@ const rules: webpack.RuleSetRule[] = [
                 loader: MiniCssExtractPlugin.loader, // creates style nodes from JS strings
             },
             {
-                loader: 'css-loader', // translates CSS into CommonJS
+                loader: 'css-loader',
+                options: {
+                    modules: true,
+                    sourceMap: true,
+                },
             },
             {
-                loader: 'less-loader', // compiles Less to CSS
+                loader: 'less-loader', // compiles Less to CSS,
+                options: {
+                    sourceMap: true,
+                },
             },
         ],
+        exclude: [path.join(process.cwd(), 'src/assets'), path.join(process.cwd(), 'node_modules')],
+    },
+    {
+        test: /\.less$/,
+        use: [
+            {
+                loader: MiniCssExtractPlugin.loader, // creates style nodes from JS strings
+            },
+
+            {
+                loader: 'css-loader', // translates CSS into CommonJS
+                options: {
+                    sourceMap: true,
+                },
+            },
+            {
+                loader: 'less-loader', // compiles Less to CSS,
+                options: {
+                    sourceMap: true,
+                },
+            },
+        ],
+        include: [path.join(process.cwd(), 'src/assets'), path.join(process.cwd(), 'node_modules')],
     },
     {
         test: /\.(j|t)s(x?)$/,

@@ -12,9 +12,6 @@ import { UserService } from './user.service';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: jwtSecret,
-      signOptions: {
-        expiresIn: '3600s',
-      },
     }),
   ],
   controllers: [UserController],

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorCode, MyHttpException } from 'src/core/exception';
 import { decrypt, encrypt } from 'src/shared/utils/crypto';
+import { getExpires } from 'src/shared/utils/token';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
@@ -15,18 +16,33 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login({ username, password }: { username: string; password: string }) {
+  async login({
+    username,
+    password,
+    remember,
+  }: {
+    username: string;
+    password: string;
+    remember: boolean;
+  }) {
     const user = await this.findUserByUsername(username);
     if (user == null) {
       throw new MyHttpException(ErrorCode.loginError);
     }
     await this.verifyPassword({ user, password });
-    const accessToken = await this.jwtService.sign({
-      username,
-      sub: user.id,
-    });
+    const expires = getExpires(remember);
+    const token = await this.jwtService.sign(
+      {
+        username,
+        sub: user.id,
+      },
+      {
+        expiresIn: expires,
+      },
+    );
     return {
-      accessToken,
+      token,
+      expires,
     };
   }
 

@@ -3,10 +3,12 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 import { adminSecret } from 'src/constant';
 import { ErrorCode, MyHttpException } from 'src/core/exception';
 import { AddUserDto, LoginDto } from './user.dto';
@@ -17,8 +19,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('login')
-  async login(@Body() body: LoginDto) {
-    return this.userService.login(body);
+  async login(
+    @Body() body: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { token, expires } = await this.userService.login(body);
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: expires,
+    });
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

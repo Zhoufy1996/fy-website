@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  getHotInfo,
-  getQuestionInfo,
-  getTranslationInfo,
-} from 'src/scripts/leetcode';
+import { getHotInfo, getQuestionInfo, getTranslationInfo } from './scripts';
 import { Repository } from 'typeorm';
 import { SaveLeetcodeDto } from './leetcode.dto';
 import {

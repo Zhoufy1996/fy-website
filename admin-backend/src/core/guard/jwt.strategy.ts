@@ -1,16 +1,25 @@
 /**
  * jwt 校验登录之后 通过bear进行校验
  */
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 import { jwtSecret } from 'src/constant';
+
+const cookieExtractor = (req: Request) => {
+  let token = '';
+  if (req && req.cookies) {
+    token = req.cookies['token'];
+  }
+  return token;
+};
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: cookieExtractor,
       ignoreExpiration: false,
       secretOrKey: jwtSecret,
     });

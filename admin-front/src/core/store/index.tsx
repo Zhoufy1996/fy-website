@@ -1,7 +1,8 @@
 /** @format */
 import React from 'react';
+import AuthContainer from './auth';
 
-const containers: any[] = [];
+const containers = [AuthContainer];
 
 const Store = ({ children }: { children: JSX.Element }) => {
     return containers.reduce((child, Container) => {
