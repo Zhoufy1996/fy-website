@@ -1,26 +1,27 @@
 /** @format */
+/** @format */
 
 import { lazy } from 'react';
 import { routerModel } from '../../core/router';
 
-const loginRoutes: routerModel[] = [
+const homeRoutes: routerModel[] = [
     {
-        name: 'login',
+        name: 'home',
         key: 'login',
-        path: '/login',
+        path: '/home',
         component: lazy(() => import('./index')),
-        shouldLogin: false,
+        shouldLogin: true,
     },
     {
-        key: 'loginredirect',
+        key: 'homeredirect',
         redirect: {
             from: '**',
-            to: '/login',
+            to: '/home',
         },
         path: '',
         name: '',
-        shouldLogin: false,
+        shouldLogin: true,
     },
 ];
 
-export default loginRoutes;
+export default homeRoutes;

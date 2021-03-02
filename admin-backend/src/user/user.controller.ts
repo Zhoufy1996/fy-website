@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Header,
   Post,
   Res,
   UseGuards,
@@ -19,6 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('login')
+  @Header('Access-Control-Allow-Credentials', 'true')
   async login(
     @Body() body: LoginDto,
     @Res({ passthrough: true }) res: Response,

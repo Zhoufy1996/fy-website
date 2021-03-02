@@ -11,7 +11,7 @@ interface loginValues {
 }
 
 /** @format */
-const Auth = () => {
+const useAuth = () => {
     const [isLogin, setLogin] = useState<boolean>(false);
     const login = useCallback(async (values: loginValues) => {
         await loginAsync(values);
@@ -30,6 +30,7 @@ const Auth = () => {
             setLogin(false);
             return Promise.reject(e);
         }
+        return '';
     }, []);
 
     return {
@@ -40,6 +41,6 @@ const Auth = () => {
     };
 };
 
-const AuthContainer = createContainer(Auth);
+const AuthContainer = createContainer(useAuth);
 
 export default AuthContainer;

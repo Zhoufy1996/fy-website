@@ -9,7 +9,7 @@ interface LoginAsyncValues {
 }
 
 export const loginAsync = (values: LoginAsyncValues): Promise<{ accessToken: string }> => {
-    return service.post('login', values);
+    return service.post('user/login', values);
 };
 
 export const verfityTokenAsync = (): Promise<void> => {

@@ -1,44 +1,46 @@
 /** @format */
-import React, { useEffect, useState } from 'react';
-import { HashRouter, useHistory } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { HashRouter } from 'react-router-dom';
 import { RouterComponent } from '../core/router';
-import routes from '../core/router/routes';
+import getRoutes from '../core/router/routes';
 import Store from '../core/store';
 import 'normalize.css';
 import '../assets/styles/index.less';
 // import styles from './App.less';
 import AuthContainer from '../core/store/auth';
 
-const MainView = ({ children }: { children: JSX.Element }) => {
+const MainView = () => {
+    const { isLogin } = AuthContainer.useContainer();
+
+    const Routes = useMemo(() => {
+        return <RouterComponent routerData={getRoutes(isLogin)} />;
+    }, [isLogin]);
+    return Routes;
+};
+
+const VerifyToken = ({ children }: { children: JSX.Element }) => {
     const [isInit, setInit] = useState<boolean>(false);
     const { verfityToken } = AuthContainer.useContainer();
-
-    const history = useHistory();
-
     useEffect(() => {
         const init = async () => {
             try {
                 await verfityToken();
-                history.push('admin');
-            } catch (e) {
-                history.push('login');
             } finally {
                 setInit(true);
             }
         };
         init();
     }, []);
-
-    return isInit ? children : <div>初始化中</div>;
+    return isInit ? children : null;
 };
 
 const App = () => {
     return (
         <Store>
             <HashRouter>
-                <MainView>
-                    <RouterComponent routerData={routes} />
-                </MainView>
+                <VerifyToken>
+                    <MainView />
+                </VerifyToken>
             </HashRouter>
         </Store>
     );

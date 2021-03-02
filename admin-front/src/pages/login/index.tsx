@@ -9,8 +9,12 @@ import styles from './Login.less';
 import AuthContainer from '../../core/store/auth';
 
 const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+};
+
+const tailLayout = {
+    wrapperCol: { offset: 10, span: 14 },
 };
 
 interface onFinishValues {
@@ -24,11 +28,11 @@ const LoginView = () => {
     const { login } = AuthContainer.useContainer();
     const onFinish = useCallback(async (values: onFinishValues) => {
         await login(values);
-        message.success('登录超过');
+        message.success('登录成功');
     }, []);
     return (
         <div className={styles['login-view']}>
-            <Card title="登录" hoverable>
+            <Card className={styles['login-card']} headStyle={{ textAlign: 'center' }} title="登录" hoverable>
                 <Form {...layout} name="login" initialValues={{ remember: true }} form={form} onFinish={onFinish}>
                     <FormItem
                         name="username"
@@ -39,12 +43,13 @@ const LoginView = () => {
                                 message: '请输入用户名',
                             },
                         ]}
+                        initialValue="zhou1996"
                     >
                         <Input placeholder="用户名" prefix={<UserOutlined />} />
                     </FormItem>
 
                     <FormItem
-                        name="passoword"
+                        name="password"
                         label="密码"
                         rules={[
                             {
@@ -52,13 +57,14 @@ const LoginView = () => {
                                 message: '请输入密码',
                             },
                         ]}
+                        initialValue="zhou1996"
                     >
                         <Input type="password" placeholder="密码" prefix={<LockOutlined />} />
                     </FormItem>
-                    <FormItem name="remember" valuePropName="checked">
+                    <FormItem {...tailLayout} name="remember" valuePropName="checked">
                         <Checkbox>记住我</Checkbox>
                     </FormItem>
-                    <FormItem>
+                    <FormItem {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             登录
                         </Button>

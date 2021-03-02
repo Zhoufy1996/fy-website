@@ -13,6 +13,7 @@ export interface routerModel {
         to: string;
     };
     showInNav?: boolean;
+    shouldLogin: boolean;
 }
 
 const transformRouter = (_router: routerModel[]): ReactNode[] => {
