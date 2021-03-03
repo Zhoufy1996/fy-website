@@ -63,7 +63,7 @@ const eslintConfig = {
         'react/jsx-props-no-spreading': [
             'error',
             {
-                exceptions: ['Form', 'FormItem'],
+                exceptions: ['Form', 'Form.Item'],
             },
         ],
         // "react/require-default-props": ["off"],

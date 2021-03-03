@@ -1,6 +1,6 @@
 /** @format */
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 
 import Store from '../core/store/component';
 import 'normalize.css';
@@ -29,12 +29,12 @@ const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
 const App = () => {
     return (
         <Store>
-            <BrowserRouter>
+            <Router>
                 <VerifyToken>
                     <ScrollToTop />
                     <AppRoutes />
                 </VerifyToken>
-            </BrowserRouter>
+            </Router>
         </Store>
     );
 };

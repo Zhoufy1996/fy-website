@@ -1,6 +1,6 @@
 /** @format */
 
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const LoginRoutes = () => {

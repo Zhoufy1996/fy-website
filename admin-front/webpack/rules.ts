@@ -21,10 +21,13 @@ const rules: webpack.RuleSetRule[] = [
                 loader: MiniCssExtractPlugin.loader, // creates style nodes from JS strings
             },
             {
-                loader: 'typings-for-css-modules',
+                loader: 'typings-for-css-modules-loader',
                 options: {
-                    modules: true,
                     sourceMap: true,
+                    modules: true, // 使用css modules
+                    namedExport: true, // 类名导出
+                    camelCase: true, // 支持驼峰
+                    less: true,
                 },
             },
             {
@@ -37,7 +40,7 @@ const rules: webpack.RuleSetRule[] = [
                 loader: 'sass-resources-loader',
                 options: {
                     // Or array of paths
-                    resources: [path.join(process.cwd(), 'src/assets/variable.less')],
+                    resources: [path.resolve(__dirname, '../src/assets/styles/variable.less')],
                 },
             },
         ],
@@ -66,7 +69,8 @@ const rules: webpack.RuleSetRule[] = [
                 loader: 'sass-resources-loader',
                 options: {
                     // Or array of paths
-                    resources: [path.join(process.cwd(), 'src/assets/variable.less')],
+                    // resources: [path.join(process.cwd(), 'src/assets/variable.less')], error
+                    resources: [path.resolve(__dirname, '../src/assets/styles/variable.less')],
                 },
             },
         ],
