@@ -4,9 +4,15 @@
 
 #root {
     height: 100%;
-    background-color: #FAFCFE;
+    background-color: #fafcfe;
+    min-width: @app-min-width;
+    overflow: scroll;
 }
 
 * {
     box-sizing: border-box;
+}
+
+.main-view {
+    margin-top: @header-height;
 }

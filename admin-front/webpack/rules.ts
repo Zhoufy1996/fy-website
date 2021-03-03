@@ -21,7 +21,7 @@ const rules: webpack.RuleSetRule[] = [
                 loader: MiniCssExtractPlugin.loader, // creates style nodes from JS strings
             },
             {
-                loader: 'css-loader',
+                loader: 'typings-for-css-modules',
                 options: {
                     modules: true,
                     sourceMap: true,
@@ -31,6 +31,13 @@ const rules: webpack.RuleSetRule[] = [
                 loader: 'less-loader', // compiles Less to CSS,
                 options: {
                     sourceMap: true,
+                },
+            },
+            {
+                loader: 'sass-resources-loader',
+                options: {
+                    // Or array of paths
+                    resources: [path.join(process.cwd(), 'src/assets/variable.less')],
                 },
             },
         ],
@@ -53,6 +60,13 @@ const rules: webpack.RuleSetRule[] = [
                 loader: 'less-loader', // compiles Less to CSS,
                 options: {
                     sourceMap: true,
+                },
+            },
+            {
+                loader: 'sass-resources-loader',
+                options: {
+                    // Or array of paths
+                    resources: [path.join(process.cwd(), 'src/assets/variable.less')],
                 },
             },
         ],

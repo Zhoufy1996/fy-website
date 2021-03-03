@@ -1,24 +1,16 @@
 /** @format */
-import React, { useEffect, useMemo, useState } from 'react';
-import { HashRouter } from 'react-router-dom';
-import { RouterComponent } from '../core/router';
-import getRoutes from '../core/router/routes';
-import Store from '../core/store';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+
+import Store from '../core/store/component';
 import 'normalize.css';
 import '../assets/styles/index.less';
 // import styles from './App.less';
 import AuthContainer from '../core/store/auth';
+import ScrollToTop from '../core/components/scrollToTop/ScrollToTop';
+import AppRoutes from './app.routes';
 
-const MainView = () => {
-    const { isLogin } = AuthContainer.useContainer();
-
-    const Routes = useMemo(() => {
-        return <RouterComponent routerData={getRoutes(isLogin)} />;
-    }, [isLogin]);
-    return Routes;
-};
-
-const VerifyToken = ({ children }: { children: JSX.Element }) => {
+const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
     const [isInit, setInit] = useState<boolean>(false);
     const { verfityToken } = AuthContainer.useContainer();
     useEffect(() => {
@@ -31,17 +23,18 @@ const VerifyToken = ({ children }: { children: JSX.Element }) => {
         };
         init();
     }, []);
-    return isInit ? children : null;
+    return isInit ? <>{children}</> : null;
 };
 
 const App = () => {
     return (
         <Store>
-            <HashRouter>
+            <BrowserRouter>
                 <VerifyToken>
-                    <MainView />
+                    <ScrollToTop />
+                    <AppRoutes />
                 </VerifyToken>
-            </HashRouter>
+            </BrowserRouter>
         </Store>
     );
 };

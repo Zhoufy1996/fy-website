@@ -5,8 +5,9 @@ import Form, { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import styles from './Login.less';
-import AuthContainer from '../../core/store/auth';
+import AuthContainer from '../../../core/store/auth';
 
 const layout = {
     labelCol: { span: 6 },
@@ -26,9 +27,11 @@ interface onFinishValues {
 const LoginView = () => {
     const [form] = useForm();
     const { login } = AuthContainer.useContainer();
+    const history = useHistory();
     const onFinish = useCallback(async (values: onFinishValues) => {
         await login(values);
         message.success('登录成功');
+        history.push('admin');
     }, []);
     return (
         <div className={styles['login-view']}>
