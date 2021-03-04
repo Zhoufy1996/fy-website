@@ -7,16 +7,19 @@ import { ArticleEntity } from './article/article.entity';
 import { LeetcodeModule } from './leetcode/leetcode.module';
 import { LeetcodeEntity } from './leetcode/leetcode.entity';
 import { TaskModule } from './task/task.module';
+import { ShortnoteModule } from './shortnote/shortnote.module';
+import { SortModule } from './sort/sort.module';
+import dbConfig from './config/db.json';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'gz-cdb-bi30e49t.sql.tencentcdb.com',
-      port: 59082,
-      username: 'root',
-      password: 'zhou1996',
-      database: 'test',
+      type: dbConfig.type as 'mysql',
+      host: dbConfig.host,
+      port: dbConfig.port,
+      username: dbConfig.username,
+      password: dbConfig.password,
+      database: dbConfig.database,
       entities: [User, ArticleEntity, LeetcodeEntity],
       synchronize: true,
       cache: true,
@@ -25,6 +28,8 @@ import { TaskModule } from './task/task.module';
     ArticleModule,
     LeetcodeModule,
     TaskModule,
+    ShortnoteModule,
+    SortModule,
   ],
 })
 export class AppModule {}

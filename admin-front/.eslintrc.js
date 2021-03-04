@@ -46,8 +46,8 @@ const eslintConfig = {
         // "@typescript-eslint/no-shadow": "error",
         // "no-redeclare": "off",
         // "@typescript-eslint/no-redeclare": "error",
-        // "react-hooks/rules-of-hooks": "error", // 检查 Hook 的规则
-        // "react-hooks/exhaustive-deps": "warn", // 检查 effect 的依赖
+        'react-hooks/rules-of-hooks': 'error', // 检查 Hook 的规则
+        'react-hooks/exhaustive-deps': 'warn', // 检查 effect 的依赖
         // "react/jsx-wrap-multilines": [
         //     "error",
         //     {

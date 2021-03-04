@@ -60,7 +60,6 @@ export class UserService {
 
     const user = new User();
     user.username = username;
-    user.createdAt = new Date();
     user.password = encrypt(password);
     return this.userRepository.save(user);
   }

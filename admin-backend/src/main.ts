@@ -3,6 +3,12 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import dbConfig from './config/db.json';
+import { createConnection } from 'typeorm';
+import { User } from './user/user.entity';
+import { encrypt } from './shared/utils/crypto';
+import { SortEntity } from './sort/sort.entity';
+import { ShortNote } from './shortnote/shortnote.entity';
 
 declare const module: any;
 
@@ -38,4 +44,36 @@ async function bootstrap() {
   }
 }
 
-bootstrap();
+const runDbScripts = async () => {
+  const connection = await createConnection({
+    type: dbConfig.type as 'mysql',
+    host: dbConfig.host,
+    port: dbConfig.port,
+    username: dbConfig.username,
+    password: dbConfig.password,
+    database: dbConfig.database,
+    synchronize: true,
+    entities: [User, SortEntity, ShortNote],
+  });
+
+  const adminUser = await connection.manager.find(User, {
+    username: 'Zhou1996',
+  });
+
+  if (adminUser == null) {
+    const user = new User();
+    user.username = 'Zhou1996';
+    user.password = encrypt('Zhou1996');
+    await connection.manager.save(user);
+  }
+
+  await connection.close();
+  return console.log('脚本执行完毕');
+};
+
+const init = async () => {
+  await runDbScripts();
+  await bootstrap();
+};
+
+init();

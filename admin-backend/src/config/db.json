@@ -1,0 +1,8 @@
+{
+  "type": "mysql",
+  "host": "gz-cdb-bi30e49t.sql.tencentcdb.com",
+  "port": 59082,
+  "username": "root",
+  "password": "zhou1996",
+  "database": "test"
+}

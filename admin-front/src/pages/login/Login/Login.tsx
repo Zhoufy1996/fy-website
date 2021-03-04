@@ -28,11 +28,14 @@ const LoginView = () => {
     const [form] = useForm();
     const { login } = AuthContainer.useContainer();
     const history = useHistory();
-    const onFinish = useCallback(async (values: onFinishValues) => {
-        await login(values);
-        message.success('登录成功');
-        history.push('/home');
-    }, []);
+    const onFinish = useCallback(
+        async (values: onFinishValues) => {
+            await login(values);
+            message.success('登录成功');
+            history.push('/home');
+        },
+        [login, history]
+    );
 
     return (
         <div className={styles.loginView}>

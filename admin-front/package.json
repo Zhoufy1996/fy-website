@@ -21,6 +21,7 @@
         "@types/mini-css-extract-plugin": "^1.2.2",
         "@types/node": "^14.14.31",
         "@types/react": "^17.0.2",
+        "@types/react-copy-to-clipboard": "^5.0.0",
         "@types/react-dom": "^17.0.1",
         "@types/react-router-dom": "^5.1.7",
         "@types/webpack-dev-middleware": "^4.1.0",
@@ -68,6 +69,7 @@
         "dayjs": "^1.10.4",
         "normalize.css": "^8.0.1",
         "react": "^17.0.1",
+        "react-copy-to-clipboard": "^5.0.3",
         "react-dom": "^17.0.1",
         "react-router-dom": "^5.2.0",
         "unstated-next": "^1.1.0"

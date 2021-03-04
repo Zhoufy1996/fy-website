@@ -1,8 +1,9 @@
 /** @format */
 import React from 'react';
 import AuthContainer from './auth';
+import ShortNotesContainer from './shortNotes';
 
-const containers = [AuthContainer];
+const containers = [AuthContainer, ShortNotesContainer];
 
 const Store = ({ children }: { children: JSX.Element }) => {
     return containers.reduce((child, Container) => {
