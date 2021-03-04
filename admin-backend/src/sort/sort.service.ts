@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MyHttpException } from 'src/core/exception';
+import { ErrorCode, MyHttpException } from 'src/core/exception';
 import { Repository } from 'typeorm';
 import { SortEntity } from './sort.entity';
-
+import {
+  AddOneSortId,
+  DeleteOneSortId,
+  GetOneProps,
+  SaveProps,
+  UpdateProps,
+} from './sort';
 @Injectable()
 export class SortService {
   constructor(
@@ -11,24 +17,57 @@ export class SortService {
     private readonly sortRepository: Repository<SortEntity>,
   ) {}
 
-  async edit({ name = '', content = [] }: { name: string; content: number[] }) {
-    const oldSort = await this.sortRepository.findOne({ name });
-    const newSort = new SortEntity();
+  async update({ name = '', content = [] }: UpdateProps) {
+    const oldSort = await this.getone({ name });
     if (oldSort) {
-      newSort.id = oldSort.id;
-      newSort.name = oldSort.name;
-      newSort.content = content;
-      return this.sortRepository.save(newSort);
+      return this.save({
+        id: oldSort.id,
+        name: oldSort.name,
+        content,
+      });
     } else {
-      throw MyHttpException();
+      throw new MyHttpException(ErrorCode.sortError);
     }
   }
 
-  async getone(name: string) {
-    const sortIds = await this.sortRepository.findOne({ name });
-    if (sortIds) {
-      return sortIds.content;
+  async getone(data: GetOneProps) {
+    const sortIds = await this.sortRepository.findOne({ name: data.name });
+    return sortIds;
+  }
+
+  async add(name: string, content: number[]) {
+    const sort = new SortEntity();
+    sort.name = name;
+    sort.content = content;
+    return this.sortRepository.save(sort);
+  }
+
+  async addOneSortId(data: AddOneSortId) {
+    const sortIds = await this.getone({ name: data.name });
+    if (sortIds == null) {
+      return this.save({
+        name: data.name,
+        content: [data.id],
+      });
     }
-    return [];
+    sortIds.content = [...sortIds.content, data.id];
+    return this.save(sortIds);
+  }
+
+  async deleteOneSortId(data: DeleteOneSortId) {
+    const sortIds = await this.getone({ name: data.name });
+
+    sortIds.content = sortIds.content.filter((id) => id !== data.id);
+    return this.save(sortIds);
+  }
+
+  async save(data: SaveProps) {
+    const sortIds = new SortEntity();
+    sortIds.content = data.content;
+    sortIds.name = data.name;
+    if (data.id) {
+      sortIds.id = data.id;
+    }
+    return this.sortRepository.save(data);
   }
 }

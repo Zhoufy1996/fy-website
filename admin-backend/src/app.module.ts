@@ -7,9 +7,11 @@ import { ArticleEntity } from './article/article.entity';
 import { LeetcodeModule } from './leetcode/leetcode.module';
 import { LeetcodeEntity } from './leetcode/leetcode.entity';
 import { TaskModule } from './task/task.module';
-import { ShortnoteModule } from './shortnote/shortnote.module';
+import { ShortnoteModule } from './shortnote/shortNote.module';
 import { SortModule } from './sort/sort.module';
 import dbConfig from './config/db.json';
+import { ShortNote } from './shortnote/shortNote.entity';
+import { SortEntity } from './sort/sort.entity';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import dbConfig from './config/db.json';
       username: dbConfig.username,
       password: dbConfig.password,
       database: dbConfig.database,
-      entities: [User, ArticleEntity, LeetcodeEntity],
+      entities: [User, ArticleEntity, LeetcodeEntity, ShortNote, SortEntity],
       synchronize: true,
       cache: true,
     }),

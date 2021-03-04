@@ -8,7 +8,7 @@ import { createConnection } from 'typeorm';
 import { User } from './user/user.entity';
 import { encrypt } from './shared/utils/crypto';
 import { SortEntity } from './sort/sort.entity';
-import { ShortNote } from './shortnote/shortnote.entity';
+import { ShortNote } from './shortnote/shortNote.entity';
 
 declare const module: any;
 

@@ -24,6 +24,12 @@ export class ErrorCode {
     MESSAGE: '权限不足',
     status: 403,
   };
+
+  static readonly sortError: CodeAndMsg = {
+    CODE: 2001,
+    MESSAGE: '无该模块排序字段',
+    status: 400,
+  };
 }
 
 export class MyHttpException extends HttpException {
