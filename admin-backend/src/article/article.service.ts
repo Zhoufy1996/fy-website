@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  CreateArticleDto,
-  FindArticleDto,
-  UpdateArticleDto,
-} from './article.dto';
 import { ArticleEntity } from './article.entity';
+import {
+  AddProps,
+  SaveProps,
+  UpdateProps,
+  DeleteProps,
+  FindProps,
+  FindOneProps,
+} from './article.type';
 
 @Injectable()
 export class ArticleService {
@@ -15,41 +18,37 @@ export class ArticleService {
     private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
-  async createArticle(art: CreateArticleDto) {
-    const article = new ArticleEntity();
-    article.title = art.title;
-    article.subTitle = art.subTitle;
-    article.content = art.content;
-    article.status = art.status;
-    article.keywords = art.keywords;
-    return this.createOrUpdateArticle(article);
+  async find({}: FindProps) {
+    return this.articleRepository.find();
   }
 
-  async updateArticle(art: UpdateArticleDto) {
-    const article = new ArticleEntity();
-    article.id = art.id;
-
-    article.title = art.title;
-    article.subTitle = art.subTitle;
-    article.content = art.content;
-    article.status = art.status;
-    article.keywords = art.keywords;
-    return this.createOrUpdateArticle(article);
-  }
-
-  async deleteArticle(id: number) {
-    return this.articleRepository.delete({ id });
-  }
-
-  async findArticle({ keyword, status }: FindArticleDto) {
-    return this.articleRepository.createQueryBuilder('article').where({
-      status,
+  async findOne({ id }: FindOneProps) {
+    return this.articleRepository.findOne({
+      id,
     });
   }
 
-  async createOrUpdateArticle(article: ArticleEntity) {
-    if (article.id == null) {
-      article.createdAt = new Date();
+  async add(article: AddProps) {
+    return this.save(article);
+  }
+
+  async update(article: UpdateProps) {
+    return this.save(article);
+  }
+
+  async delete({ id }: DeleteProps) {
+    return this.articleRepository.delete({ id });
+  }
+
+  async save({ id, title, subTitle, content, status, keywords }: SaveProps) {
+    const article = new ArticleEntity();
+    article.title = title;
+    article.subTitle = subTitle;
+    article.content = content;
+    article.status = status;
+    article.keywords = keywords;
+    if (id) {
+      article.id = id;
     }
     return this.articleRepository.save(article);
   }

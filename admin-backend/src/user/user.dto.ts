@@ -1,6 +1,6 @@
-import { IsBoolean, IsString, Length } from 'class-validator';
+import { IsBoolean, Length } from 'class-validator';
 
-class UsernameAndPassword {
+export class LoginDto {
   @Length(6, 20)
   username: string;
 
@@ -9,10 +9,4 @@ class UsernameAndPassword {
 
   @IsBoolean()
   remember: boolean;
-}
-
-export class LoginDto extends UsernameAndPassword {}
-export class AddUserDto extends UsernameAndPassword {
-  @IsString()
-  secret: string;
 }

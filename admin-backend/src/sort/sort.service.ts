@@ -9,7 +9,7 @@ import {
   GetOneProps,
   SaveProps,
   UpdateProps,
-} from './sort';
+} from './sort.type';
 @Injectable()
 export class SortService {
   constructor(
@@ -17,20 +17,7 @@ export class SortService {
     private readonly sortRepository: Repository<SortEntity>,
   ) {}
 
-  async update({ name = '', content = [] }: UpdateProps) {
-    const oldSort = await this.getone({ name });
-    if (oldSort) {
-      return this.save({
-        id: oldSort.id,
-        name: oldSort.name,
-        content,
-      });
-    } else {
-      throw new MyHttpException(ErrorCode.sortError);
-    }
-  }
-
-  async getone(data: GetOneProps) {
+  async findOne(data: GetOneProps) {
     const sortIds = await this.sortRepository.findOne({ name: data.name });
     return sortIds;
   }
@@ -42,8 +29,21 @@ export class SortService {
     return this.sortRepository.save(sort);
   }
 
+  async update({ name = '', content = [] }: UpdateProps) {
+    const oldSort = await this.findOne({ name });
+    if (oldSort) {
+      return this.save({
+        id: oldSort.id,
+        name: oldSort.name,
+        content,
+      });
+    } else {
+      throw new MyHttpException(ErrorCode.sortError);
+    }
+  }
+
   async addOneSortId(data: AddOneSortId) {
-    const sortIds = await this.getone({ name: data.name });
+    const sortIds = await this.findOne({ name: data.name });
     if (sortIds == null) {
       return this.save({
         name: data.name,
@@ -55,7 +55,7 @@ export class SortService {
   }
 
   async deleteOneSortId(data: DeleteOneSortId) {
-    const sortIds = await this.getone({ name: data.name });
+    const sortIds = await this.findOne({ name: data.name });
 
     sortIds.content = sortIds.content.filter((id) => id !== data.id);
     return this.save(sortIds);

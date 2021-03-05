@@ -1,7 +1,7 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsString } from 'class-validator';
 import { QuestionStatus, CodeLanguage } from './leetcode.entity';
 export class SaveLeetcodeDto {
-  @IsNumber()
+  @IsInt()
   id: number;
 
   @IsEnum(QuestionStatus)
@@ -23,6 +23,6 @@ export class SaveLeetcodeDto {
 }
 
 export class ResetDto {
-  @IsNumber()
+  @IsInt()
   id: number;
 }

@@ -1,6 +1,6 @@
 import {
   IsEnum,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Length,
@@ -28,21 +28,25 @@ class Article {
   keywords: string[];
 }
 
-export class CreateArticleDto extends Article {}
-export class UpdateArticleDto extends Article {
-  @IsNumber()
+export class AddDto extends Article {}
+export class UpdateDto extends Article {
+  @IsInt()
   id: number;
 }
-export class DeleteArticleDto {
-  @IsNumber()
+export class DeleteDto {
+  @IsInt()
   id: number;
 }
 
-export class FindArticleDto {
-  @IsString()
-  keyword: string;
+export class FindDto {
+  // @IsString()
+  // keyword: string;
+  // @IsOptional()
+  // @IsEnum(ArticleStatus)
+  // status: ArticleStatus;
+}
 
-  @IsOptional()
-  @IsEnum(ArticleStatus)
-  status: ArticleStatus;
+export class FindOneDto {
+  @IsInt()
+  id: number;
 }

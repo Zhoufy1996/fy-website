@@ -3,12 +3,12 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import dbConfig from './config/db.json';
+import config from './config.json';
 import { createConnection } from 'typeorm';
 import { User } from './user/user.entity';
-import { encrypt } from './shared/utils/crypto';
+import { encrypt } from './core/utils/crypto';
 import { SortEntity } from './sort/sort.entity';
-import { ShortNote } from './shortnote/shortNote.entity';
+import { ShortNoteEntity } from './shortnote/shortNote.entity';
 
 declare const module: any;
 
@@ -16,7 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://127.0.0.1:4500'],
+    origin: config.origin,
     credentials: true,
   });
   app.setGlobalPrefix('api');
@@ -36,7 +36,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);
 
-  await app.listen(4000);
+  await app.listen(config.port);
 
   if (module.hot) {
     module.hot.accept();
@@ -46,24 +46,24 @@ async function bootstrap() {
 
 const runDbScripts = async () => {
   const connection = await createConnection({
-    type: dbConfig.type as 'mysql',
-    host: dbConfig.host,
-    port: dbConfig.port,
-    username: dbConfig.username,
-    password: dbConfig.password,
-    database: dbConfig.database,
+    type: config.db.type as 'mysql',
+    host: config.db.host,
+    port: config.db.port,
+    username: config.db.username,
+    password: config.db.password,
+    database: config.db.database,
     synchronize: true,
-    entities: [User, SortEntity, ShortNote],
+    entities: [User, SortEntity, ShortNoteEntity],
   });
 
   const adminUser = await connection.manager.find(User, {
-    username: 'Zhou1996',
+    username: config.user.username,
   });
 
   if (adminUser == null) {
     const user = new User();
-    user.username = 'Zhou1996';
-    user.password = encrypt('Zhou1996');
+    user.username = config.user.username;
+    user.password = encrypt(config.user.password);
     await connection.manager.save(user);
   }
 

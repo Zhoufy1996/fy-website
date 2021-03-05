@@ -8,9 +8,9 @@ import { SortService } from './sort.service';
 export class SortController {
   constructor(private readonly sortService: SortService) {}
 
-  @Post('get')
-  async getOne(@Body() body: GetOneDto) {
-    return this.sortService.getone(body);
+  @Post('find')
+  async findOne(@Body() body: GetOneDto) {
+    return this.sortService.findOne(body);
   }
 
   @Post('update')

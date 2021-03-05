@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/shared/entity/base.entity';
+import { BaseEntity } from 'src/core/entity/base.entity';
 import { Column, Entity } from 'typeorm';
 
 export enum ArticleStatus {

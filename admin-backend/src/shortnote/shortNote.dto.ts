@@ -1,11 +1,6 @@
 import { IsInt, IsString } from 'class-validator';
 
-export class GetOneDto {
-  @IsInt()
-  id: number;
-}
-
-export class AddDto {
+class ShortNoteEntity {
   @IsString()
   title: string;
 
@@ -18,12 +13,21 @@ export class AddDto {
   keywords: string[];
 }
 
-export class UpdateDto extends AddDto {
+export class AddDto extends ShortNoteEntity {}
+
+export class UpdateDto extends ShortNoteEntity {
   @IsInt()
   id: number;
 }
 
 export class DeleteDto {
+  @IsInt()
+  id: number;
+}
+
+export class FindDto {}
+
+export class FindOneDto {
   @IsInt()
   id: number;
 }

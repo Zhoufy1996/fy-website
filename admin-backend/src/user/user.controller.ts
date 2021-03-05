@@ -1,18 +1,7 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Header,
-  Post,
-  Res,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Header, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { adminSecret } from 'src/constant';
-import { ErrorCode, MyHttpException } from 'src/core/exception';
-import { AddUserDto, LoginDto } from './user.dto';
+import { LoginDto } from './user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -32,17 +21,8 @@ export class UserController {
     });
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Post('add')
-  async addUser(@Body() body: AddUserDto) {
-    if (body.secret !== adminSecret) {
-      throw new MyHttpException(ErrorCode.permissionError);
-    }
-    return this.userService.adduser(body);
-  }
-
   @UseGuards(AuthGuard('jwt'))
-  @Post('verifytoken')
+  @Post('verifyToken')
   async verifyToken() {
     return '';
   }

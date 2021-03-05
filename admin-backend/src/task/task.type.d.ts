@@ -1,7 +1,13 @@
 export interface AddProps {
+  beginTime: Date;
+
+  endTime: Date;
+
+  award: number;
+
   title: string;
+
   content: string;
-  keywords: string[];
 }
 
 export interface UpdateProps extends AddProps {
@@ -13,5 +19,12 @@ export interface SaveProps extends AddProps {
 }
 
 export interface DeleteProps {
+  id: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface FindProps {}
+
+export interface FindOneProps {
   id: number;
 }

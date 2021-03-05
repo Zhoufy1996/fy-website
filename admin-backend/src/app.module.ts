@@ -7,22 +7,22 @@ import { ArticleEntity } from './article/article.entity';
 import { LeetcodeModule } from './leetcode/leetcode.module';
 import { LeetcodeEntity } from './leetcode/leetcode.entity';
 import { TaskModule } from './task/task.module';
-import { ShortnoteModule } from './shortnote/shortNote.module';
+import { ShortNoteModule } from './shortnote/ShortNoteEntity.module';
 import { SortModule } from './sort/sort.module';
-import dbConfig from './config/db.json';
-import { ShortNote } from './shortnote/shortNote.entity';
+import config from './config.json';
+import { ShortNoteEntity } from './shortnote/shortNote.entity';
 import { SortEntity } from './sort/sort.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: dbConfig.type as 'mysql',
-      host: dbConfig.host,
-      port: dbConfig.port,
-      username: dbConfig.username,
-      password: dbConfig.password,
-      database: dbConfig.database,
-      entities: [User, ArticleEntity, LeetcodeEntity, ShortNote, SortEntity],
+      type: config.db.type as 'mysql',
+      host: config.db.host,
+      port: config.db.port,
+      username: config.db.username,
+      password: config.db.password,
+      database: config.db.database,
+      entities: [User, ArticleEntity, LeetcodeEntity, ShortNoteEntity, SortEntity],
       synchronize: true,
       cache: true,
     }),
@@ -30,7 +30,7 @@ import { SortEntity } from './sort/sort.entity';
     ArticleModule,
     LeetcodeModule,
     TaskModule,
-    ShortnoteModule,
+    ShortNoteModule,
     SortModule,
   ],
 })

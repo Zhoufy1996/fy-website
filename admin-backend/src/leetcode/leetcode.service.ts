@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getHotInfo, getQuestionInfo, getTranslationInfo } from './scripts';
 import { Repository } from 'typeorm';
-import { SaveLeetcodeDto } from './leetcode.dto';
 import {
   CodeLanguage,
   LeetcodeEntity,
   Level,
   QuestionStatus,
 } from './leetcode.entity';
+import { SaveProps, RestProps } from './leetcode.type';
 
 const LevelMap = {
   1: Level.SIMPLE,
@@ -91,7 +91,7 @@ export class LeetcodeService {
     return result;
   }
 
-  async save(question: SaveLeetcodeDto) {
+  async save(question: SaveProps) {
     const data = new LeetcodeEntity();
     data.id = question.id;
     data.status = question.status;
@@ -102,7 +102,7 @@ export class LeetcodeService {
     return this.leetcodeRepository.save(data);
   }
 
-  async reset(id: number) {
+  async reset({ id }: RestProps) {
     const data = new LeetcodeEntity();
     data.id = id;
     data.status = QuestionStatus.UNDONE;

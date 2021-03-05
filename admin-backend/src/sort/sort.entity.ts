@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from 'src/shared/entity/base.entity';
+import { BaseEntity } from 'src/core/entity/base.entity';
 
 @Entity('sort')
 export class SortEntity extends BaseEntity {

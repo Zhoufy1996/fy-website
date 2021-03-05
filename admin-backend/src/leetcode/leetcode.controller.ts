@@ -22,6 +22,6 @@ export class LeetcodeController {
 
   @Post('reset')
   async reset(@Body() body: ResetDto) {
-    return this.leetcodeService.reset(body.id);
+    return this.leetcodeService.reset(body);
   }
 }
