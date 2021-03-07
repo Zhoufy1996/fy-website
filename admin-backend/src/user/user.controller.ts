@@ -17,7 +17,7 @@ export class UserController {
     const { token, expires } = await this.userService.login(body);
     res.cookie('token', token, {
       httpOnly: true,
-      maxAge: expires,
+      maxAge: expires * 1000,
     });
   }
 

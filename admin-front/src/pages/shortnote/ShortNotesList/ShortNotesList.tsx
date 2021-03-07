@@ -22,19 +22,22 @@ const ShortNotesList = () => {
     return (
         <div ref={ref}>
             {range(0, columnCount).map((n) => {
-                const ids = shortNotesSortIds.slice(n, n * rowCount);
+                const ids = shortNotesSortIds.slice(n * rowCount, (n + 1) * rowCount);
                 return (
                     <Row key={n} gutter={[16, 16]}>
                         {ids.map((id) => {
                             const shortNote = shortNotesData[id];
                             return (
-                                <Col span={24 / rowCount}>
-                                    <ShortNote
-                                        title={shortNote.title}
-                                        content={shortNote.content}
-                                        keywords={shortNote.keywords}
-                                    />
-                                </Col>
+                                shortNote && (
+                                    <Col key={id} span={24 / rowCount}>
+                                        <ShortNote
+                                            id={shortNote.id}
+                                            title={shortNote.title}
+                                            content={shortNote.content}
+                                            keywords={shortNote.keywords}
+                                        />
+                                    </Col>
+                                )
                             );
                         })}
                     </Row>

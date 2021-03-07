@@ -1,14 +1,15 @@
 /** @format */
-/** @format */
 
 import React, { lazy } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const HomeRoutes = () => {
+    const match = useRouteMatch();
+    window.console.log(match);
     return (
         <>
             <Switch>
-                <Route exact path="/home" component={lazy(() => import('./Home/Home'))} />
+                <Route exact path={match.url} component={lazy(() => import('./Home/Home'))} />
             </Switch>
         </>
     );

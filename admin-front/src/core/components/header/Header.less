@@ -3,11 +3,20 @@
 .header {
     box-shadow: @small-shadow;
     position: fixed;
-    width: @app-min-width;
+    width: 100%;
     margin: 0 auto 0 auto;
-    height: @header-height;
+    padding: 0;
+    &Container {
+        width: @app-min-width;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        .menuItem {
+            width: 100px;
+            text-align: center;
+        }
+    }
     .logo {
         float: left;
     }
-
 }

@@ -63,6 +63,9 @@ const rules: webpack.RuleSetRule[] = [
                 loader: 'less-loader', // compiles Less to CSS,
                 options: {
                     sourceMap: true,
+                    lessOptions: {
+                        javascriptEnabled: true,
+                    },
                 },
             },
             {
@@ -99,6 +102,10 @@ const rules: webpack.RuleSetRule[] = [
             },
         ],
         exclude: [path.join(process.cwd(), 'node_modules')],
+    },
+    {
+        test: /\.(png|jpg|jpeg|gif)$/,
+        loader: 'file-loader',
     },
 ];
 

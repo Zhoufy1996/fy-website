@@ -50,7 +50,6 @@ const LoginView = () => {
                                 message: '请输入用户名',
                             },
                         ]}
-                        initialValue="zhou1996"
                     >
                         <Input placeholder="用户名" prefix={<UserOutlined />} />
                     </Form.Item>
@@ -64,7 +63,6 @@ const LoginView = () => {
                                 message: '请输入密码',
                             },
                         ]}
-                        initialValue="zhou1996"
                     >
                         <Input type="password" placeholder="密码" prefix={<LockOutlined />} />
                     </Form.Item>

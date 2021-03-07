@@ -6,7 +6,7 @@ import { JwtStrategy } from 'src/core/guard/jwt.strategy';
 import { UserController } from './user.controller';
 import { User } from './user.entity';
 import { UserService } from './user.service';
-import config from '../config.json';
+import config from '../config';
 
 @Module({
   imports: [

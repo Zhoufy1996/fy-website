@@ -1,16 +1,17 @@
 /** @format */
+
 import React, { lazy } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-const ArticleRoutes = () => {
+const LeetcodeRoutes = () => {
     const match = useRouteMatch();
     return (
         <>
             <Switch>
-                <Route exact path={`${match.url}`} component={lazy(() => import('./ArticleView/ArticleView'))} />
+                <Route exact path={`${match.url}`} component={lazy(() => import('./LeetcodeView/leetcodeView'))} />
             </Switch>
         </>
     );
 };
 
-export default ArticleRoutes;
+export default LeetcodeRoutes;

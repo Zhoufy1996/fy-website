@@ -17,18 +17,16 @@ export class TaskEntity extends BaseEntity {
   })
   endTime: Date;
 
-  @Column({
-    type: 'varchar2',
-  })
+  @Column({})
   award: number;
 
   @Column({
-    type: 'varchar2',
+    type: 'varchar',
   })
   title: string;
 
   @Column({
-    type: 'varchar2',
+    type: 'varchar',
   })
   content: string;
 }

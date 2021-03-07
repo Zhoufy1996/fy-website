@@ -9,5 +9,6 @@ import { SortService } from './sort.service';
   imports: [TypeOrmModule.forFeature([SortEntity])],
   controllers: [SortController],
   providers: [SortService, JwtStrategy],
+  exports: [SortService],
 })
 export class SortModule {}

@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import config from './config.json';
+import config from './config';
 import { createConnection } from 'typeorm';
 import { User } from './user/user.entity';
 import { encrypt } from './core/utils/crypto';

@@ -22,7 +22,7 @@ const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
             }
         };
         init();
-    }, []);
+    }, [verfityToken]);
     return isInit ? <>{children}</> : null;
 };
 

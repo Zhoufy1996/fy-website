@@ -10,7 +10,7 @@ import {
 } from './shortNote.dto';
 import { ShortNoteService } from './shortNote.service';
 
-const sortName = 'sortNote';
+const sortName = 'shortNote';
 @UseGuards(AuthGuard('jwt'))
 @Controller('shortNote')
 export class ShortNoteController {

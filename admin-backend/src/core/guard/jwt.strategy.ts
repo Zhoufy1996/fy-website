@@ -5,7 +5,7 @@ import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import config from '../../config.json';
+import config from '../../config';
 
 const cookieExtractor = (req: Request) => {
   let token = '';

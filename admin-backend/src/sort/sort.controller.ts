@@ -10,7 +10,11 @@ export class SortController {
 
   @Post('find')
   async findOne(@Body() body: GetOneDto) {
-    return this.sortService.findOne(body);
+    const sort = await this.sortService.findOne(body);
+    if (sort) {
+      return sort.content.map((id) => Number(id));
+    }
+    return [];
   }
 
   @Post('update')

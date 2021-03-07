@@ -1,16 +1,19 @@
 /** @format */
-import { Card, Menu, Popover } from 'antd';
+import { Card, Divider, Menu, Popover } from 'antd';
 import React from 'react';
-import { EditOutlined, CopyOutlined } from '@ant-design/icons';
+import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import ShortNotesContainer from '../../../core/store/shortNotes';
 
 interface ShortNoteProps {
     title: string;
     content: string;
+    id: number;
     keywords: string[];
 }
 
-const ShortNote = ({ title = '', content = '', keywords = [] }: ShortNoteProps) => {
+const ShortNote = ({ title = '', content = '', keywords = [], id = 0 }: ShortNoteProps) => {
+    const { openEditModal, deleteShortNote } = ShortNotesContainer.useContainer();
     return (
         <Card
             title={title}
@@ -34,10 +37,14 @@ const ShortNote = ({ title = '', content = '', keywords = [] }: ShortNoteProps) 
                 </Popover>
             }
             hoverable
-            actions={[<EditOutlined key="edit" />]}
+            actions={[
+                <EditOutlined onClick={() => openEditModal(id)} key="edit" />,
+                <DeleteOutlined onClick={() => deleteShortNote(id)} />,
+            ]}
         >
             {content}
-            {keywords.map((s) => s)}
+            <Divider style={{ margin: 4 }} />
+            <div>{keywords.join(',')}</div>
         </Card>
     );
 };

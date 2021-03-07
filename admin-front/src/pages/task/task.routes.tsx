@@ -2,15 +2,15 @@
 import React, { lazy } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-const ArticleRoutes = () => {
+const TaskRoutes = () => {
     const match = useRouteMatch();
     return (
         <>
             <Switch>
-                <Route exact path={`${match.url}`} component={lazy(() => import('./ArticleView/ArticleView'))} />
+                <Route exact path={`${match.url}`} component={lazy(() => import('./TaskView/TaskView'))} />
             </Switch>
         </>
     );
 };
 
-export default ArticleRoutes;
+export default TaskRoutes;

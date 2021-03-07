@@ -2,32 +2,37 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { createContainer } from 'unstated-next';
+import { transformArrToObj } from '../../shared/utils/transform';
+import { getSortIdsAsync } from '../services/common';
 import {
     addShortNoteAsync,
     deleteShortNoteAsync,
     getShortNoteByIdAsync,
+    getShortNotesDataAsync,
     updateShortNoteAsync,
 } from '../services/shortNotes';
 import { SortIds } from '../types/common';
-import { ShortNotes, AddSortNoteProps, UpdateSortNoteProps } from '../types/shortNote';
+import { ShortNotes, AddSortNoteProps, UpdateSortNoteProps, ShortNote } from '../types/shortNote';
+
+const sortName = 'shortNote';
 
 const useShortNotes = () => {
     const [shortNotesData, setShortNotes] = useState<ShortNotes>({});
 
     const [shortNotesSortIds, setSortIds] = useState<SortIds>([]);
 
-    // -1表示新增 >0表示编辑 null表示未打开弹框
-    const [modalId, setModalId] = useState<number | null>(null);
-
     const getShortNotes = useCallback(async () => {
-        const [data, shortIds] = await Promise.all([]);
-        setShortNotes(data);
+        const [data, shortIds] = await Promise.all([getShortNotesDataAsync(), getSortIdsAsync(sortName)]);
+        setShortNotes(transformArrToObj<ShortNote>(data));
         setSortIds(shortIds);
     }, []);
 
-    const addShortNote = useCallback(async (values: AddSortNoteProps) => {
-        await addShortNoteAsync(values);
-    }, []);
+    useEffect(() => {
+        getShortNotes();
+    }, [getShortNotes]);
+
+    // -1表示新增 >0表示编辑 null表示未打开弹框
+    const [modalId, setModalId] = useState<number | null>(null);
 
     const getShortNoteById = useCallback(async (id: number) => {
         const res = await getShortNoteByIdAsync({ id });
@@ -45,18 +50,35 @@ const useShortNotes = () => {
         });
     }, []);
 
-    const updateShortNote = useCallback(
-        async (values: UpdateSortNoteProps) => {
-            await updateShortNoteAsync(values);
-            await getShortNoteById(values.id);
+    const closeModal = useCallback(() => {
+        setModalId(null);
+    }, []);
+
+    const addShortNote = useCallback(
+        async (values: AddSortNoteProps) => {
+            const res = await addShortNoteAsync(values);
+            closeModal();
+            getShortNoteById(res.id);
         },
-        [getShortNoteById]
+        [closeModal, getShortNoteById]
     );
 
-    const deleteShortNote = useCallback(async () => {
-        await deleteShortNoteAsync();
-        await getShortNotes();
-    }, [getShortNotes]);
+    const updateShortNote = useCallback(
+        async (values: UpdateSortNoteProps) => {
+            const res = await updateShortNoteAsync(values);
+            closeModal();
+            getShortNoteById(res.id);
+        },
+        [closeModal, getShortNoteById]
+    );
+
+    const deleteShortNote = useCallback(
+        async (id: number) => {
+            await deleteShortNoteAsync(id);
+            await getShortNotes();
+        },
+        [getShortNotes]
+    );
 
     useEffect(() => {
         getShortNotes();
@@ -66,8 +88,8 @@ const useShortNotes = () => {
         setModalId(-1);
     }, []);
 
-    const closeModal = useCallback(() => {
-        setModalId(null);
+    const openEditModal = useCallback((id: number) => {
+        setModalId(id);
     }, []);
 
     return {
@@ -79,6 +101,7 @@ const useShortNotes = () => {
         deleteShortNote,
         openAddModal,
         closeModal,
+        openEditModal,
     };
 };
 
