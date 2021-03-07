@@ -57,7 +57,7 @@ export class SortService {
   async deleteOneSortId(data: DeleteOneSortId) {
     const sortIds = await this.findOne({ name: data.name });
 
-    sortIds.content = sortIds.content.filter((id) => id !== data.id);
+    sortIds.content = sortIds.content.filter((id) => Number(id) !== data.id);
     return this.save(sortIds);
   }
 
