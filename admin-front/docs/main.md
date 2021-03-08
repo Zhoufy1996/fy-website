@@ -12,3 +12,4 @@
 
 ### type
 
+service/types => store => view

@@ -3,7 +3,7 @@ import { Card, Divider, Menu, Popover } from 'antd';
 import React from 'react';
 import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import ShortNotesContainer from '../../../core/store/shortNotes';
+import ShortNotesContainer from '../../../core/store/shortNote';
 
 interface ShortNoteProps {
     title: string;

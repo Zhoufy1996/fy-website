@@ -1,28 +1,23 @@
 /** @format */
 
-export interface ShortNote {
-    id: number;
-    title: string;
-    content: string;
-    keywords: string[];
-    createdAt: string;
-    updatedAt: string;
-}
+import { AddFunc, DataBase, DataSource, DeleteFunc, FindAllFunc, FindOneFunc, UpdateFunc } from './common';
 
-export interface ShortNotes {
-    [key: number]: ShortNote;
-}
-
-export interface GetShortNoteProps {
-    id: number;
-}
-
-export interface AddSortNoteProps {
+export interface ShortNoteBase {
     title: string;
     content: string;
     keywords: string[];
 }
 
-export interface UpdateSortNoteProps extends AddSortNoteProps {
-    id: number;
-}
+export type ShortNote = ShortNoteBase & DataBase;
+
+export type ShortNotes = DataSource<ShortNote>;
+
+export type FindShortNotesAsyncFunc = FindAllFunc<ShortNote>;
+
+export type FindOneShortNoteAsyncFunc = FindOneFunc<ShortNote>;
+
+export type AddShortNoteAsyncFunc = AddFunc<ShortNoteBase>;
+
+export type UpdateShortNoteAsyncFunc = UpdateFunc<ShortNoteBase>;
+
+export type DeleteShortNoteAsyncFunc = DeleteFunc;

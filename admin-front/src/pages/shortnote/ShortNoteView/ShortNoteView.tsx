@@ -1,7 +1,7 @@
 /** @format */
 import React from 'react';
 import { Button, Layout, Row } from 'antd';
-import ShortNotesContainer from '../../../core/store/shortNotes';
+import ShortNotesContainer from '../../../core/store/shortNote';
 import EditShortNode from '../EditShortNote/EditShortNode';
 import ShortNotesList from '../ShortNotesList/ShortNotesList';
 

@@ -2,7 +2,7 @@
 import { Modal, Form, Input } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import React, { useMemo } from 'react';
-import ShortNotesContainer from '../../../core/store/shortNotes';
+import ShortNotesContainer from '../../../core/store/shortNote';
 
 const layout = {
     labelCol: { span: 6 },

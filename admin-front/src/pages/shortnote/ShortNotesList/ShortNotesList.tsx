@@ -2,7 +2,7 @@
 import React, { useMemo, useRef } from 'react';
 import { Col, Row } from 'antd';
 import useRect from '../../../shared/hooks/useRect';
-import ShortNotesContainer from '../../../core/store/shortNotes';
+import ShortNotesContainer from '../../../core/store/shortNote';
 import { range } from '../../../shared/utils/range';
 import ShortNote from '../ShortNote/ShortNote';
 
