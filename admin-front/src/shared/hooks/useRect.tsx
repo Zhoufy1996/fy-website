@@ -1,7 +1,9 @@
 /** @format */
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-const useRect = (ref: React.RefObject<HTMLElement>) => {
+const useRect = <T extends HTMLElement>() => {
+    const ref = useRef<T>(null);
+
     const [width, setWidth] = useState<number>(0);
     const [height, setHeight] = useState<number>(0);
 
@@ -27,6 +29,7 @@ const useRect = (ref: React.RefObject<HTMLElement>) => {
     }, [setRect]);
 
     return {
+        ref,
         width,
         height,
     };

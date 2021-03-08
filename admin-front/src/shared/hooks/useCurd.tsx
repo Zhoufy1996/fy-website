@@ -1,6 +1,6 @@
 /** @format */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { findSortIdsAsync } from '../../core/services/common';
 import { AddFunc, DataBase, DataSource, DeleteFunc, FindAllFunc, SortIds, UpdateFunc } from '../../core/types/common';
 import { transformArrToObj } from '../utils/transform';
@@ -38,7 +38,7 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
     }, []);
 
     const findDataSource = useCallback(async () => {
-        const [resData, resSortIds] = await Promise.all([findAllAsync(), findSortIdsAsync(sortName)]);
+        const [resData, resSortIds] = await Promise.all([findAllAsync({}), findSortIdsAsync(sortName)]);
 
         setDataSource(transformArrToObj(resData));
         setSortIds(resSortIds);
@@ -82,10 +82,6 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
         },
         [deleteAsync, findDataSource]
     );
-
-    useEffect(() => {
-        findDataSource();
-    }, [findDataSource]);
 
     return {
         dataSource,

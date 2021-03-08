@@ -1,12 +1,9 @@
 /** @format */
 
+import { ArticleStatus } from '../constant/article';
 import { AddFunc, DataBase, DataSource, DeleteFunc, FindAllFunc, FindOneFunc, UpdateFunc } from './common';
 
 /** @format */
-enum ArticleStatus {
-    DRAFT = 'draft',
-    PUBLISHED = 'published',
-}
 
 export interface ArticleBase {
     title: string;

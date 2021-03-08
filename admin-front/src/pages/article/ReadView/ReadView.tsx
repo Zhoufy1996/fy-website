@@ -1,13 +1,25 @@
 /** @format */
 import React from 'react';
-import { Article } from '../../../core/types/article';
+import { useParams } from 'react-router-dom';
+import ReadMarkdown from '../../../core/components/markdown/Read';
+import ArticlesContainer from '../../../core/store/article';
+import NotFound from '../NotFound/NotFound';
 
-interface ReadViewProps {
-    article: Article;
-}
+interface ReadViewProps {}
 
 const ReadView: React.FC<ReadViewProps> = () => {
-    return <div>read</div>;
+    const params = useParams<{ id: string }>();
+    const { articlesData } = ArticlesContainer.useContainer();
+
+    const article = articlesData[Number(params.id)];
+
+    return article ? (
+        <div>
+            <ReadMarkdown content={article.content} />
+        </div>
+    ) : (
+        <NotFound />
+    );
 };
 
 export default ReadView;

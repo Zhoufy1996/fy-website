@@ -1,27 +1,36 @@
 /** @format */
 
-import React, { useCallback, useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { useEffect } from 'react';
+import MdEditor from 'react-markdown-editor-lite';
+import MarkdownIt from 'markdown-it';
+import ReadMarkdown from './Read';
+import useRect from '../../../shared/hooks/useRect';
+import 'react-markdown-editor-lite/lib/index.css';
 
-interface ReadMarkdownProps {
-    value?: string;
-    defaultValue: string;
-    onChange: (value: string) => void;
+interface EditMarkdownProps {
+    defaultValue?: string;
+    onChange?: (value: string) => void;
 }
 
-const ReadMarkdown: React.FC<ReadMarkdownProps> = ({ value, defaultValue, onChange }) => {
-    const [v, setV] = useState<string>(value || defaultValue || '');
+const mdParser = new MarkdownIt();
 
-    const handleChange = useCallback(
-        (s: string) => {
-            setV(s);
-            onChange(s);
-        },
-        [onChange]
+// https://github.com/HarryChen0506/react-markdown-editor-lite/blob/master/src/demo/index.tsx
+const EditMarkdown: React.FC<EditMarkdownProps> = ({ defaultValue, onChange }) => {
+    return (
+        <div style={{ flex: 1, display: 'flex' }} ref={ref}>
+            <div style={{ flex: 1 }}>
+                <MdEditor
+                    renderHTML={(text) => mdParser.render(text)}
+                    onChange={handleEditorChange}
+                    style={{ height }}
+                />
+            </div>
+
+            <div style={{ flex: 1 }}>
+                <ReadMarkdown content={value} />
+            </div>
+        </div>
     );
-
-    return <ReactQuill theme="snow" value={v} onChange={handleChange} />;
 };
 
-export default ReadMarkdown;
+export default EditMarkdown;
