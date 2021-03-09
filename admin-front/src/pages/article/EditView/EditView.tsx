@@ -7,7 +7,6 @@ import ArticlesContainer from '../../../core/store/article';
 import { ArticleBase } from '../../../core/types/article';
 import EditMarkdown from '../../../shared/components/Markdown/Edit';
 import useImportFile from '../../../shared/hooks/useImportFile';
-import useEditor from '../../../shared/hooks/useEditor';
 
 interface ReadViewProps {}
 
@@ -21,10 +20,13 @@ const getInitArticle = (): ArticleBase => {
     };
 };
 
+// todo 导出 同步 存为草稿 发布
 const EditView: React.FC<ReadViewProps> = () => {
     const { editId, articlesData } = ArticlesContainer.useContainer();
 
     const [article, setArticle] = useState<ArticleBase>(getInitArticle());
+
+    const [defaultContent, setDefaultContent] = useState<string>(article.content);
 
     useEffect(() => {
         if (editId === -1) {
@@ -48,20 +50,16 @@ const EditView: React.FC<ReadViewProps> = () => {
 
     const [isSync, setSync] = useState<boolean>(false);
 
-    const importFile = useCallback(
-        (res: string[]) => {
-            setContent(res[0]);
-        },
-        [setContent]
-    );
+    const importFile = useCallback((res: string[]) => {
+        setDefaultContent(res[0]);
+    }, []);
 
     const { handleSelectFile, inputEl } = useImportFile({ accept: ['.md'], onChange: importFile });
-    console.log(article);
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             {inputEl}
             <div style={{ flex: 1 }}>
-                <EditMarkdown key="edit" defaultValue={article?.content} onChange={setContent} />
+                <EditMarkdown key="edit" defaultValue={defaultContent} onChange={setContent} />
             </div>
             <Dropdown
                 visible

@@ -1,5 +1,5 @@
 /** @format */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Editor } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import ReadMarkdown from './Read';
@@ -22,10 +22,14 @@ interface DProps {
  *
  */
 const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {} }) => {
-    const { value, editorState, onEditorChange } = useEditor({
+    const { value, editorState, onEditorChange, handleChangeValue } = useEditor({
         defaultValue,
         onChange,
     });
+
+    useEffect(() => {
+        handleChangeValue(defaultValue);
+    }, [handleChangeValue, defaultValue]);
 
     const { ref: rootRef, width } = useRect<HTMLDivElement>();
 
@@ -48,10 +52,27 @@ const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {}
     const { startMove, move, endMove } = useMove(onMove);
 
     const { ref1, ref2 } = useSyncScroll<HTMLDivElement>();
+
+    const editorRef = useRef<Editor>(null);
+    const handleFocus = useCallback(() => {
+        editorRef.current?.focus();
+    }, []);
     return (
-        <div className={styles.root} onMouseUp={endMove} onMouseLeave={endMove} ref={rootRef} onMouseMove={move}>
+        <div
+            onKeyDown={handleFocus}
+            className={styles.root}
+            onMouseUp={endMove}
+            onMouseLeave={endMove}
+            ref={rootRef}
+            onMouseMove={move}
+        >
             <div ref={ref1} className={styles.write} style={{ width: writeWidth }}>
-                <Editor placeholder="快来填写内容吧" editorState={editorState} onChange={onEditorChange} />
+                <Editor
+                    ref={editorRef}
+                    placeholder="快来填写内容吧"
+                    editorState={editorState}
+                    onChange={onEditorChange}
+                />
             </div>
             <div className={styles.divide} onMouseDown={startMove} />
 
