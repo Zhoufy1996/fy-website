@@ -47,8 +47,6 @@ const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {}
         });
     }, []);
 
-    console.log(value);
-
     const { startMove, move, endMove } = useMove(onMove);
 
     const { ref1, ref2 } = useSyncScroll<HTMLDivElement>();

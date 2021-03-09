@@ -20,7 +20,7 @@ const useImportFile = ({ onChange = () => {}, accept = [], multiple = false }: U
             const res = await readTextFiles(ref.current.files);
             onChange(res);
         }
-    }, []);
+    }, [onChange]);
 
     const inputEl = useMemo(() => {
         // Note: 使用opacity 来隐藏文件输入，而不是使用 visibility: hidden 或者 display: none，因为辅助技术将后两种样式解释为文件 input 是不可交互的。
