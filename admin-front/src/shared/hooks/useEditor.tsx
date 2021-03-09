@@ -1,58 +1,35 @@
 /** @format */
-import { useCallback, useState } from 'react';
-import { UnprivilegedEditor, Range } from 'react-quill';
-import { Delta as TypeDelta, Sources } from 'quill';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
+import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 
 interface UseEditorProps {
     defaultValue: string;
+    onChange: (v: string) => void;
 }
 
-export const formatRange = (range: Range | null): string => {
-    return range ? [range.index, range.index + range.length].join(',') : 'none';
-};
-
-const useEditor = ({ defaultValue }: UseEditorProps) => {
-    const [value, setValue] = useState<string>(defaultValue || '');
-    const [events, setEvents] = useState<string[]>([]);
-    const [selection, setSelection] = useState<Range>(null);
-    const onEditorChange = useCallback((_: string, __: TypeDelta, source: Sources, editor: UnprivilegedEditor) => {
-        const currentValue = (editor.getText() as unknown) as string;
-
-        setEvents((pre) => {
-            return [`[${source}] text-change`, ...pre];
-        });
-        setValue(currentValue);
-    }, []);
-
-    const onEditorChangeSelection = useCallback(
-        (range: Range, source: Sources) => {
-            setSelection(range);
-            setEvents((pre) => {
-                return [`[${source}] selection-change(${formatRange(selection)} -> ${formatRange(range)})`, ...pre];
-            });
-        },
-        [selection]
+const useEditor = ({ defaultValue, onChange }: UseEditorProps) => {
+    const [editorState, setEditorState] = useState<EditorState>(() =>
+        EditorState.createWithContent(convertFromRaw(markdownToDraft(defaultValue)))
     );
 
-    const onEditorFocus = useCallback((range: Range, source: Sources) => {
-        setEvents((pre) => {
-            return [`[${source}] focus(${formatRange(range)})`, ...pre];
-        });
+    const value = useMemo(() => {
+        return draftToMarkdown(convertToRaw(editorState.getCurrentContent()));
+    }, [editorState]);
+
+    const onEditorChange = useCallback((newEditorState: EditorState) => {
+        // Convert draftjs state to markdown
+        setEditorState(newEditorState);
     }, []);
 
-    const onEditorBlur = useCallback((previousRange: Range, source: Sources) => {
-        setEvents((pre) => {
-            return [`[${source}] blur(${formatRange(previousRange)})`, ...pre];
-        });
-    }, []);
+    useEffect(() => {
+        onChange(value);
+    }, [onChange, value]);
+
     return {
         value,
-        events,
-        selection,
+        editorState,
         onEditorChange,
-        onEditorChangeSelection,
-        onEditorFocus,
-        onEditorBlur,
     };
 };
 

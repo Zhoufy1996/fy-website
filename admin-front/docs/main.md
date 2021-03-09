@@ -13,3 +13,12 @@
 ### type
 
 service/types => store => view
+
+
+source <(curl -sL https://multi.netlify.app/v2ray.sh) --zh
+
+systemctl stop firewalld.service
+
+systemctl disable firewalld.service
+
+\cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime

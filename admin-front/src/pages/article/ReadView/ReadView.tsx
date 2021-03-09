@@ -1,7 +1,7 @@
 /** @format */
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import ReadMarkdown from '../../../core/components/markdown/Read';
+import ReadMarkdown from '../../../shared/components/Markdown/Read';
 import ArticlesContainer from '../../../core/store/article';
 import NotFound from '../NotFound/NotFound';
 

@@ -1,9 +1,10 @@
 /** @format */
+import { Button, Input } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
-import EditMarkdown from '../../../core/components/markdown/Edit';
 import { ArticleStatus } from '../../../core/constant/article';
 import ArticlesContainer from '../../../core/store/article';
 import { ArticleBase } from '../../../core/types/article';
+import EditMarkdown from '../../../shared/components/Markdown/Edit';
 
 interface ReadViewProps {}
 
@@ -42,7 +43,47 @@ const EditView: React.FC<ReadViewProps> = () => {
         });
     }, []);
 
-    return <EditMarkdown defaultValue={article?.content} onChange={setContent} />;
+    return (
+        <div>
+            <Input
+                value={article.title}
+                onChange={(e) => {
+                    setArticle((pre) => {
+                        return {
+                            ...pre,
+                            title: e.target.value,
+                        };
+                    });
+                }}
+            />
+            <Input
+                value={article.subTitle}
+                onChange={(e) => {
+                    setArticle((pre) => {
+                        return {
+                            ...pre,
+                            subTitle: e.target.value,
+                        };
+                    });
+                }}
+            />
+            <Input
+                value={article.keywords.join(' ')}
+                onChange={(e) => {
+                    setArticle((pre) => {
+                        return {
+                            ...pre,
+                            keywords: e.target.value.split(' '),
+                        };
+                    });
+                }}
+            />
+            <div>{article.status === ArticleStatus.DRAFT ? '草稿' : '已发布'}</div>
+            <Button>存为草稿</Button>
+            <Button>发布</Button>
+            <EditMarkdown defaultValue={article?.content} onChange={setContent} />
+        </div>
+    );
 };
 
 export default EditView;

@@ -6,6 +6,8 @@ export interface TaskBase {
     award: number;
     title: string;
     content: string;
+    beginTime: Date;
+    endTime: Date;
 }
 
 export type Task = TaskBase & DataBase;
