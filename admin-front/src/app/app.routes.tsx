@@ -8,13 +8,11 @@ const AppRoutes = () => {
     return (
         <Suspense fallback={<div>组件加载中</div>}>
             <Switch>
-                <Route path="/login" exact component={lazy(() => import('../pages/login/login.routes'))} />
+                <Route key="login" path="/login" exact component={lazy(() => import('../pages/login/login.routes'))} />
                 {isLogin ? (
-                    <>
-                        <Route path="/" component={lazy(() => import('../pages/admin/admin.routes'))} />
-                    </>
+                    <Route key="admin" path="/" component={lazy(() => import('../pages/admin/admin.routes'))} />
                 ) : null}
-                <Redirect to={`/${isLogin ? 'home' : 'login'}`} />
+                <Redirect key="redirect" to={`/${isLogin ? 'home' : 'login'}`} />
             </Switch>
         </Suspense>
     );

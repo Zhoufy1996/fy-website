@@ -3,26 +3,28 @@ import React, { lazy } from 'react';
 import { Route, Switch, Redirect, useRouteMatch } from 'react-router-dom';
 import HeaderView from '../../core/components/header/Header';
 
+const Home = lazy(() => import('../home/home.routes'));
+const Article = lazy(() => import('../article/article.routes'));
+const Task = lazy(() => import('../task/task.routes'));
+const ShortNote = lazy(() => import('../shortnote/shortnote.routes'));
+const Leetcode = lazy(() => import('../leetcode/leetcode.routes'));
+const Dev = lazy(() => import('../dev/dev.routes'));
+
 const AppRoutes = () => {
+    // store数据变化导致match变化
     const match = useRouteMatch();
     return (
         <>
-            <HeaderView />
-            <div className="main-view">
+            <HeaderView key="header" />
+            <div key="main" className="main-view">
                 <Switch>
-                    <Route path={`${match.url}home`} component={lazy(() => import('../home/home.routes'))} />
-                    <Route path={`${match.url}article`} component={lazy(() => import('../article/article.routes'))} />
-                    <Route path={`${match.url}task`} component={lazy(() => import('../task/task.routes'))} />
-                    <Route
-                        path={`${match.url}shortnote`}
-                        component={lazy(() => import('../shortnote/shortnote.routes'))}
-                    />
-                    <Route
-                        path={`${match.url}leetcode`}
-                        component={lazy(() => import('../leetcode/leetcode.routes'))}
-                    />
-                    <Route path={`${match.url}dev`} component={lazy(() => import('../dev/dev.routes'))} />
-                    <Redirect to="/home" />
+                    <Route key={`${match.url}home`} path="/home" component={Home} />
+                    <Route key={`${match.url}article`} path="/article" component={Article} />
+                    <Route key={`${match.url}task`} path="/task" component={Task} />
+                    <Route key={`${match.url}shortnote`} path="/shortnote" component={ShortNote} />
+                    <Route key={`${match.url}leetcode`} path="/leetcode" component={Leetcode} />
+                    <Route key={`${match.url}dev`} path="/dev" component={Dev} />
+                    <Redirect key="redirect" to="/home" />
                 </Switch>
             </div>
         </>

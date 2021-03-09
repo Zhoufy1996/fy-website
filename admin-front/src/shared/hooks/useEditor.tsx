@@ -4,13 +4,13 @@ import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 
 interface UseEditorProps {
-    defaultValue: string;
-    onChange: (v: string) => void;
+    defaultValue?: string;
+    onChange?: (v: string) => void;
 }
 
 const useEditor = ({ defaultValue, onChange }: UseEditorProps) => {
     const [editorState, setEditorState] = useState<EditorState>(() =>
-        EditorState.createWithContent(convertFromRaw(markdownToDraft(defaultValue)))
+        EditorState.createWithContent(convertFromRaw(markdownToDraft(defaultValue || '')))
     );
 
     const value = useMemo(() => {
@@ -22,14 +22,21 @@ const useEditor = ({ defaultValue, onChange }: UseEditorProps) => {
         setEditorState(newEditorState);
     }, []);
 
+    const handleChangeValue = useCallback((str: string) => {
+        setEditorState(EditorState.createWithContent(convertFromRaw(markdownToDraft(str))));
+    }, []);
+
     useEffect(() => {
-        onChange(value);
+        if (typeof onChange === 'function') {
+            onChange(value);
+        }
     }, [onChange, value]);
 
     return {
         value,
         editorState,
         onEditorChange,
+        handleChangeValue,
     };
 };
 

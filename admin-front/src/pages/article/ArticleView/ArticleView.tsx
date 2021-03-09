@@ -6,7 +6,6 @@ import ReadView from '../ReadView/ReadView';
 
 const ArticleView = () => {
     const { editId } = ArticlesContainer.useContainer();
-
     return editId == null ? <ReadView /> : <EditView />;
 };
 

@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 
-import Store from '../core/store/component';
 import 'normalize.css';
 import '../assets/styles/index.less';
 // import styles from './App.less';
 import AuthContainer from '../core/store/auth';
 import ScrollToTop from '../core/components/scrollToTop/ScrollToTop';
 import AppRoutes from './app.routes';
+import Store from '../core/store/component';
 
 const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
     const [isInit, setInit] = useState<boolean>(false);

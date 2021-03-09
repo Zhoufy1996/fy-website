@@ -14,7 +14,7 @@ const ReadView: React.FC<ReadViewProps> = () => {
     const article = articlesData[Number(params.id)];
 
     return article ? (
-        <div>
+        <div style={{ flex: 1 }}>
             <ReadMarkdown content={article.content} />
         </div>
     ) : (

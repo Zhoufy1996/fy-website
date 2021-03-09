@@ -22,7 +22,10 @@ interface DProps {
  *
  */
 const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {} }) => {
-    const { value, editorState, onEditorChange } = useEditor({ defaultValue, onChange });
+    const { value, editorState, onEditorChange } = useEditor({
+        defaultValue,
+        onChange,
+    });
 
     const { ref: rootRef, width } = useRect<HTMLDivElement>();
 
@@ -40,14 +43,15 @@ const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {}
         });
     }, []);
 
+    console.log(value);
+
     const { startMove, move, endMove } = useMove(onMove);
 
     const { ref1, ref2 } = useSyncScroll<HTMLDivElement>();
-
     return (
         <div className={styles.root} onMouseUp={endMove} onMouseLeave={endMove} ref={rootRef} onMouseMove={move}>
             <div ref={ref1} className={styles.write} style={{ width: writeWidth }}>
-                <Editor editorState={editorState} onChange={onEditorChange} />
+                <Editor placeholder="快来填写内容吧" editorState={editorState} onChange={onEditorChange} />
             </div>
             <div className={styles.divide} onMouseDown={startMove} />
 

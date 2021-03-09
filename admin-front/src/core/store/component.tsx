@@ -7,7 +7,7 @@ import TasksContainer from './task';
 
 const containers = [AuthContainer, ShortNotesContainer, ArticlesContainer, TasksContainer];
 
-const Store = ({ children }: { children: JSX.Element }) => {
+const Store: React.FC<any> = ({ children }) => {
     return containers.reduce((child, Container) => {
         return <Container.Provider>{child}</Container.Provider>;
     }, children);

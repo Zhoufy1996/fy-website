@@ -4,12 +4,16 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import ArticleMenu from './ArticleMenu/ArticleMenu';
 import ArticlesContainer from '../../core/store/article';
 
+const ArticleView = lazy(() => import('./ArticleView/ArticleView'));
+
 const ArticleRoutes = () => {
     const match = useRouteMatch();
     const { findArticles } = ArticlesContainer.useContainer();
     useEffect(() => {
         findArticles();
-    }, [findArticles]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div style={{ flex: 1, display: 'flex', padding: 24 }}>
             <div
@@ -26,12 +30,8 @@ const ArticleRoutes = () => {
             </div>
             <div style={{ flexGrow: 1, flexShrink: 1, marginLeft: 16, display: 'flex' }}>
                 <Switch>
-                    <Route
-                        exact
-                        path={`${match.url}/article/:id`}
-                        component={lazy(() => import('./ArticleView/ArticleView'))}
-                    />
-                    <Redirect to={`${match.url}/article/`} />
+                    <Route exact path={`${match.url}/:id`} component={ArticleView} />
+                    <Redirect to={`${match.url}/0`} />
                 </Switch>
             </div>
         </div>

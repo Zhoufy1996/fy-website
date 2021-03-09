@@ -26,7 +26,6 @@ const useArticles = () => {
         deleteAsync: deleteArticleAsync,
         sortName,
     });
-
     return {
         articlesData: dataSource,
         articlesSortIds: sortIds,
