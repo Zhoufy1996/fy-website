@@ -6,7 +6,7 @@ import { ArticleStatus } from '../../../core/constant/article';
 import ArticlesContainer from '../../../core/store/article';
 import { ArticleBase } from '../../../core/types/article';
 import EditMarkdown from '../../../shared/components/Markdown/Edit';
-import useImportFile from '../../../shared/hooks/useImportFile';
+import { exportFile, selectFile } from '../../../shared/utils/file';
 
 interface ReadViewProps {}
 
@@ -25,8 +25,6 @@ const EditView: React.FC<ReadViewProps> = () => {
     const { editId, articlesData } = ArticlesContainer.useContainer();
 
     const [article, setArticle] = useState<ArticleBase>(getInitArticle());
-
-    const [defaultContent, setDefaultContent] = useState<string>(article.content);
 
     useEffect(() => {
         if (editId === -1) {
@@ -50,19 +48,23 @@ const EditView: React.FC<ReadViewProps> = () => {
 
     const [isSync, setSync] = useState<boolean>(false);
 
-    const importFile = useCallback((res: string[]) => {
-        setDefaultContent(res[0]);
-    }, []);
-
-    const { handleSelectFile, inputEl } = useImportFile({ accept: ['.md'], onChange: importFile });
+    useEffect(() => {
+        const title = /(#+)(.+)/.exec(article.content);
+        const keywords = /(keywords: )(.+)/.exec(article.content);
+        setArticle((pre) => {
+            return {
+                ...pre,
+                title: (title && title[2] && title[2].trim()) || '',
+                keywords: (keywords && keywords[2] && keywords[2].split(' ')) || [],
+            };
+        });
+    }, [article.content]);
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            {inputEl}
-            <div style={{ flex: 1 }}>
-                <EditMarkdown key="edit" defaultValue={defaultContent} onChange={setContent} />
+            <div style={{ flex: 1, minHeight: 0 }}>
+                <EditMarkdown key="edit" value={article.content} onChange={setContent} />
             </div>
             <Dropdown
-                visible
                 overlay={
                     <Menu
                         style={{ width: 200, textAlign: 'center' }}
@@ -72,7 +74,19 @@ const EditView: React.FC<ReadViewProps> = () => {
                             }
 
                             if (key === 'import') {
-                                handleSelectFile();
+                                selectFile({
+                                    accept: ['.md'],
+                                }).then((res) => {
+                                    setContent(res[0]);
+                                });
+                            }
+
+                            if (key === 'export') {
+                                exportFile({
+                                    fileContent: article.content,
+                                    type: 'md',
+                                    name: article.title || ' ',
+                                });
                             }
                         }}
                     >

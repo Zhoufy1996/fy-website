@@ -1,5 +1,5 @@
 /** @format */
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Switch, Redirect, useRouteMatch } from 'react-router-dom';
 import HeaderView from '../../core/components/header/Header';
 
@@ -17,15 +17,17 @@ const AppRoutes = () => {
         <>
             <HeaderView key="header" />
             <div key="main" className="main-view">
-                <Switch>
-                    <Route key={`${match.url}home`} path="/home" component={Home} />
-                    <Route key={`${match.url}article`} path="/article" component={Article} />
-                    <Route key={`${match.url}task`} path="/task" component={Task} />
-                    <Route key={`${match.url}shortnote`} path="/shortnote" component={ShortNote} />
-                    <Route key={`${match.url}leetcode`} path="/leetcode" component={Leetcode} />
-                    <Route key={`${match.url}dev`} path="/dev" component={Dev} />
-                    <Redirect key="redirect" to="/home" />
-                </Switch>
+                <Suspense fallback={<div>组件加载中x</div>}>
+                    <Switch>
+                        <Route key={`${match.url}home`} path="/home" component={Home} />
+                        <Route key={`${match.url}article`} path="/article" component={Article} />
+                        <Route key={`${match.url}task`} path="/task" component={Task} />
+                        <Route key={`${match.url}shortnote`} path="/shortnote" component={ShortNote} />
+                        <Route key={`${match.url}leetcode`} path="/leetcode" component={Leetcode} />
+                        <Route key={`${match.url}dev`} path="/dev" component={Dev} />
+                        <Redirect key="redirect" to="/home" />
+                    </Switch>
+                </Suspense>
             </div>
         </>
     );

@@ -1,16 +1,16 @@
 /** @format */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Editor } from 'draft-js';
+
+import React, { useCallback, useEffect, useState } from 'react';
 import 'draft-js/dist/Draft.css';
 import ReadMarkdown from './Read';
 import styles from './Edit.less';
 import useMove from '../../hooks/useMove';
 import useRect from '../../hooks/useRect';
 import useSyncScroll from '../../hooks/useSyncScroll';
-import useEditor from '../../hooks/useEditor';
+import CodeMirrorEditor from './CodeMirror';
 
 interface DProps {
-    defaultValue?: string;
+    value?: string;
     onChange?: (v: string) => void;
 }
 
@@ -21,15 +21,15 @@ interface DProps {
  * 4. 导入(图片怎么办)
  *
  */
-const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {} }) => {
-    const { value, editorState, onEditorChange, handleChangeValue } = useEditor({
-        defaultValue,
-        onChange,
-    });
+const EditMarkdown: React.FC<DProps> = ({ value = '', onChange = () => {} }) => {
+    // const { value, editorState, onEditorChange, handleChangeValue } = useEditor({
+    //     defaultValue,
+    //     onChange,
+    // });
 
-    useEffect(() => {
-        handleChangeValue(defaultValue);
-    }, [handleChangeValue, defaultValue]);
+    // useEffect(() => {
+    //     handleChangeValue(defaultValue);
+    // }, [handleChangeValue, defaultValue]);
 
     const { ref: rootRef, width } = useRect<HTMLDivElement>();
 
@@ -51,26 +51,18 @@ const EditMarkdown: React.FC<DProps> = ({ defaultValue = '', onChange = () => {}
 
     const { ref1, ref2 } = useSyncScroll<HTMLDivElement>();
 
-    const editorRef = useRef<Editor>(null);
-    const handleFocus = useCallback(() => {
-        editorRef.current?.focus();
-    }, []);
+    const handleChange = useCallback(
+        (e) => {
+            onChange(e.target.value);
+        },
+        [onChange]
+    );
     return (
-        <div
-            onKeyDown={handleFocus}
-            className={styles.root}
-            onMouseUp={endMove}
-            onMouseLeave={endMove}
-            ref={rootRef}
-            onMouseMove={move}
-        >
-            <div ref={ref1} className={styles.write} style={{ width: writeWidth }}>
-                <Editor
-                    ref={editorRef}
-                    placeholder="快来填写内容吧"
-                    editorState={editorState}
-                    onChange={onEditorChange}
-                />
+        <div className={styles.root} onMouseUp={endMove} onMouseLeave={endMove} ref={rootRef} onMouseMove={move}>
+            <div ref={ref1} className={styles.write} style={{ width: writeWidth, position: 'relative' }}>
+                <div className={styles.text} style={{ width: writeWidth }}>
+                    <CodeMirrorEditor value={value} onChange={handleChange} />
+                </div>
             </div>
             <div className={styles.divide} onMouseDown={startMove} />
 

@@ -14,6 +14,8 @@ const useEditor = ({ defaultValue, onChange }: UseEditorProps) => {
     );
 
     const value = useMemo(() => {
+        console.log(convertToRaw(editorState.getCurrentContent()));
+        console.log(draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
         return draftToMarkdown(convertToRaw(editorState.getCurrentContent()));
     }, [editorState]);
 
