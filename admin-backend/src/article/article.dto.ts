@@ -9,10 +9,10 @@ import {
 import { ArticleStatus } from './article.entity';
 
 class Article {
-  @Length(2, 20)
+  @Length(0, 20)
   title: string;
 
-  @Length(2, 20)
+  @Length(0, 20)
   subTitle: string;
 
   @IsString()

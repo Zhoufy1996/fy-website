@@ -1,7 +1,7 @@
 /** @format */
 import { Button, Menu, Typography } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { useHistory } from 'react-router-dom';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import { ArticleStatus } from '../../../core/constant/article';
 import ArticlesContainer from '../../../core/store/article';
@@ -9,6 +9,7 @@ import { ArticleBase } from '../../../core/types/article';
 import EditMarkdown from '../../../shared/components/Markdown/Edit';
 import { exportFile, selectFile } from '../../../shared/utils/file';
 import SettingBtn from '../../../shared/components/SettingBtn/SettingBtn';
+import useSyncData from '../../../shared/hooks/useSyncData';
 
 interface ReadViewProps {}
 
@@ -23,20 +24,15 @@ const getInitArticle = (): ArticleBase => {
 };
 
 const EditView: React.FC<ReadViewProps> = () => {
-    const { editId, articlesData, addArticle, updateArticle, startUpdate } = ArticlesContainer.useContainer();
-
+    const { articlesData, addArticle, updateArticle, startUpdate, articleId } = ArticlesContainer.useContainer();
     const [article, setArticle] = useState<ArticleBase>(getInitArticle());
+    const history = useHistory();
 
     useEffect(() => {
-        if (editId === -1) {
-            setArticle(getInitArticle());
-            return;
-        }
-
-        const data = articlesData[editId as number];
-
-        setArticle(data || getInitArticle());
-    }, [editId, articlesData]);
+        const art = articlesData[articleId];
+        setArticle(art || getInitArticle());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [articleId]);
 
     const setContent = useCallback((value: string) => {
         setArticle((pre) => {
@@ -47,10 +43,8 @@ const EditView: React.FC<ReadViewProps> = () => {
         });
     }, []);
 
-    const [isSync, setSync] = useState<boolean>(false);
-
     const saveDraft = useCallback(async () => {
-        if (editId === -1) {
+        if (articleId === 0) {
             return addArticle({
                 ...article,
                 status: ArticleStatus.DRAFT,
@@ -58,25 +52,46 @@ const EditView: React.FC<ReadViewProps> = () => {
         }
         return updateArticle({
             ...article,
-            id: editId as number,
+            id: articleId as number,
             status: ArticleStatus.DRAFT,
         });
-    }, [article, editId, addArticle, updateArticle]);
+    }, [article, articleId, addArticle, updateArticle]);
 
     const publish = useCallback(async () => {
-        if (editId === -1) {
+        if (articleId === 0) {
             return addArticle({
                 ...article,
-                status: ArticleStatus.DRAFT,
+                status: ArticleStatus.PUBLISHED,
             });
         }
         return updateArticle({
             ...article,
-            id: editId as number,
-            status: ArticleStatus.DRAFT,
+            id: articleId as number,
+            status: ArticleStatus.PUBLISHED,
         });
-    }, [article, editId, addArticle, updateArticle]);
+    }, [article, articleId, addArticle, updateArticle]);
 
+    // 同步
+    const [isSync, setSync] = useState<boolean>(false);
+
+    const syncSave = useCallback(async () => {
+        if (isSync) {
+            try {
+                const res = await saveDraft();
+
+                startUpdate(res.id);
+                if (res.id !== articleId) {
+                    history.push(`/article/${res.id}`);
+                }
+            } catch (e) {
+                setSync(false);
+            }
+        }
+    }, [isSync, saveDraft, startUpdate, history, articleId]);
+
+    useSyncData({ delay: 1000, callback: syncSave });
+
+    // 提取标题和关键词
     useEffect(() => {
         const title = /(#+)(.+)/.exec(article.content);
         const keywords = /(keywords: )(.+)/.exec(article.content);
@@ -89,35 +104,18 @@ const EditView: React.FC<ReadViewProps> = () => {
         });
     }, [article.content]);
 
-    const [nextSyncTime, setNextSyncTime] = useState<Dayjs>(dayjs());
-
-    useEffect(() => {
-        const save = async () => {
-            if (isSync) {
-                if (dayjs().isAfter(nextSyncTime)) {
-                    const res = await saveDraft();
-
-                    setNextSyncTime(dayjs().add(2, 'minute'));
-                    startUpdate(res.id);
-                }
-            }
-        };
-        save();
-    }, [isSync, nextSyncTime, saveDraft, startUpdate]);
-
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, minHeight: 0 }}>
-                <EditMarkdown key="edit" value={article.content} onChange={setContent} />
+                <EditMarkdown key={articleId} value={article.content} onChange={setContent} />
             </div>
             <SettingBtn
                 overlay={
                     <Menu
                         style={{ width: 200, textAlign: 'center' }}
-                        onClick={({ key }) => {
+                        onClick={async ({ key }) => {
                             if (key === 'sync') {
                                 setSync((pre) => !pre);
-                                setNextSyncTime(dayjs().add(2, 'minute'));
                             }
 
                             if (key === 'import') {
@@ -137,11 +135,15 @@ const EditView: React.FC<ReadViewProps> = () => {
                             }
 
                             if (key === 'draft') {
-                                saveDraft();
+                                const res = await saveDraft();
+                                setArticle(res);
+                                history.push(`/article/${res.id}`);
                             }
 
                             if (key === 'publish') {
-                                publish();
+                                const res = await publish();
+                                setArticle(res);
+                                history.push(`/article/${res.id}`);
                             }
                         }}
                     >
@@ -155,7 +157,7 @@ const EditView: React.FC<ReadViewProps> = () => {
                         <Menu.Item key="export">导出</Menu.Item>
                         <Menu.Divider />
                         <Menu.Item key="sync">
-                            <Button shape="circle" type={isSync ? 'primary' : 'default'}>
+                            <Button disabled={articleId === 0} shape="circle" type={isSync ? 'primary' : 'default'}>
                                 <CloudUploadOutlined />
                             </Button>
                         </Menu.Item>

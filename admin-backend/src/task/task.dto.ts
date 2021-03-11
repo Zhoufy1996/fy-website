@@ -19,7 +19,7 @@ class Task {
   @IsInt()
   @Min(0)
   @Max(100)
-  progess: number;
+  progress: number;
 }
 
 export class AddDto extends Task {}

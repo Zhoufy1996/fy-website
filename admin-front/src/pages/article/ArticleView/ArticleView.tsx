@@ -5,8 +5,13 @@ import EditView from '../EditView/EditView';
 import ReadView from '../ReadView/ReadView';
 
 const ArticleView = () => {
-    const { editId } = ArticlesContainer.useContainer();
-    return editId == null ? <ReadView /> : <EditView />;
+    const { mode, articleId } = ArticlesContainer.useContainer();
+
+    return (
+        <div style={{ flexGrow: 1, flexShrink: 1, marginLeft: 16, display: 'flex' }}>
+            {mode === 'read' ? <ReadView key={articleId} /> : <EditView key={articleId} />}
+        </div>
+    );
 };
 
 export default ArticleView;

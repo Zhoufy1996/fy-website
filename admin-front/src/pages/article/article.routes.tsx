@@ -13,7 +13,6 @@ const ArticleRoutes = () => {
         findArticles();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     return (
         <div style={{ flex: 1, display: 'flex', padding: 24 }}>
             <div
@@ -28,12 +27,10 @@ const ArticleRoutes = () => {
             >
                 <ArticleMenu />
             </div>
-            <div style={{ flexGrow: 1, flexShrink: 1, marginLeft: 16, display: 'flex' }}>
-                <Switch>
-                    <Route exact path={`${match.url}/:id`} component={ArticleView} />
-                    <Redirect to={`${match.url}/0`} />
-                </Switch>
-            </div>
+            <Switch>
+                <Route exact path={`${match.url}/:id`} component={ArticleView} />
+                <Redirect to={`${match.url}/0`} />
+            </Switch>
         </div>
     );
 };

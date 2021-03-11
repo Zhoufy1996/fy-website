@@ -1,10 +1,11 @@
 /** @format */
 
-import { useCallback } from 'react';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { createContainer } from 'unstated-next';
 import useCurd from '../../shared/hooks/useCurd';
 import { addArticleAsync, deleteArticleAsync, findArticlesAsync, updateArticleAsync } from '../services/article';
-import { ArticleBase, SaveArticleProps } from '../types/article';
+import { ArticleBase } from '../types/article';
 
 const sortName = 'article';
 
@@ -12,7 +13,6 @@ const useArticles = () => {
     const {
         dataSource,
         sortIds,
-        editId,
         startAdd,
         startUpdate,
         endEdit,
@@ -28,10 +28,14 @@ const useArticles = () => {
         sortName,
     });
 
+    const [mode, setMode] = useState<'read' | 'edit'>('read');
+
+    const { pathname } = useLocation();
+
+    const articleId = Number(pathname.split('/').pop());
     return {
         articlesData: dataSource,
         articlesSortIds: sortIds,
-        editId,
         startAdd,
         startUpdate,
         endEdit,
@@ -39,6 +43,10 @@ const useArticles = () => {
         addArticle: addData,
         updateArticle: updateData,
         deleteArticle: deleteData,
+        setMode,
+        mode,
+
+        articleId,
     };
 };
 

@@ -45,12 +45,14 @@ class CodeMirrorEditor extends React.Component<CodeMirrorEditorProps, { isContro
         if (value) {
             if (this.editor.getValue() !== value) {
                 this.editor.setValue(value);
+                this.editor.refresh();
             }
         }
     }
 
     componentWillUnmount() {
         this.editor?.off('change', this.handleChange);
+        this.editor = undefined;
     }
 
     handleChange() {

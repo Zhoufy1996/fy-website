@@ -28,14 +28,16 @@ const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
 
 const App = () => {
     return (
-        <Store>
+        <AuthContainer.Provider>
             <Router>
-                <VerifyToken>
-                    <ScrollToTop />
-                    <AppRoutes />
-                </VerifyToken>
+                <Store>
+                    <VerifyToken>
+                        <ScrollToTop />
+                        <AppRoutes />
+                    </VerifyToken>
+                </Store>
             </Router>
-        </Store>
+        </AuthContainer.Provider>
     );
 };
 
