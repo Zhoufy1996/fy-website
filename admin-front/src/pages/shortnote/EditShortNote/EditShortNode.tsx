@@ -49,6 +49,7 @@ const EditShortNode = () => {
             keywords: shortNotesData[modalId].keywords.join(' '),
         };
     }, [modalId, shortNotesData]);
+
     return (
         <Modal
             title={modalId === -1 ? '新增' : `编辑`}
@@ -57,6 +58,7 @@ const EditShortNode = () => {
             visible
             closable
             destroyOnClose
+            key="edit"
         >
             <Form form={form} initialValues={initialValue} {...layout}>
                 <Form.Item label="标题" name="title">
