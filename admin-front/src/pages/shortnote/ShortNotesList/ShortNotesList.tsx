@@ -1,5 +1,5 @@
 /** @format */
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Col, Row } from 'antd';
 import useRect from '../../../shared/hooks/useRect';
 import ShortNotesContainer from '../../../core/store/shortNote';
@@ -7,8 +7,7 @@ import { range } from '../../../shared/utils/range';
 import ShortNote from '../ShortNote/ShortNote';
 
 const ShortNotesList = () => {
-    const ref = useRef<HTMLDivElement>(null);
-    const { width } = useRect(ref);
+    const { width, ref } = useRect<HTMLDivElement>();
 
     const { shortNotesData, shortNotesSortIds } = ShortNotesContainer.useContainer();
 
@@ -19,6 +18,7 @@ const ShortNotesList = () => {
     const columnCount = useMemo(() => {
         return Math.ceil(shortNotesSortIds.length / rowCount);
     }, [shortNotesSortIds.length, rowCount]);
+
     return (
         <div ref={ref}>
             {range(0, columnCount).map((n) => {

@@ -47,7 +47,7 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
     const addData = useCallback(
         async (data: T) => {
             const res = await addAsync(data);
-            endEdit();
+
             setDataSource((pre) => {
                 return {
                     ...pre,
@@ -57,22 +57,23 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
             setSortIds((pre) => {
                 return [...pre, res.id];
             });
+            return res;
         },
-        [addAsync, endEdit]
+        [addAsync]
     );
 
     const updateData = useCallback(
         async (data: T & { id: number }) => {
             const res = await updateAsync(data);
-            endEdit();
             setDataSource((pre) => {
                 return {
                     ...pre,
                     [res.id]: res,
                 };
             });
+            return res;
         },
-        [updateAsync, endEdit]
+        [updateAsync]
     );
 
     const deleteData = useCallback(

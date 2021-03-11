@@ -17,18 +17,20 @@ const EditShortNode = () => {
     const [form] = useForm();
 
     const handleOk = () => {
-        form.validateFields().then((value) => {
+        form.validateFields().then(async (value) => {
             if (modalId === -1) {
-                addShortNote({
+                await addShortNote({
                     ...value,
                     keywords: value.keywords.split(' '),
                 });
+                closeModal();
             } else {
-                updateShortNote({
+                await updateShortNote({
                     id: modalId,
                     ...value,
                     keywords: value.keywords.split(' '),
                 });
+                closeModal();
             }
         });
     };

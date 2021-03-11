@@ -1,9 +1,10 @@
 /** @format */
 
+import { useCallback } from 'react';
 import { createContainer } from 'unstated-next';
 import useCurd from '../../shared/hooks/useCurd';
 import { addArticleAsync, deleteArticleAsync, findArticlesAsync, updateArticleAsync } from '../services/article';
-import { ArticleBase } from '../types/article';
+import { ArticleBase, SaveArticleProps } from '../types/article';
 
 const sortName = 'article';
 
@@ -26,6 +27,7 @@ const useArticles = () => {
         deleteAsync: deleteArticleAsync,
         sortName,
     });
+
     return {
         articlesData: dataSource,
         articlesSortIds: sortIds,

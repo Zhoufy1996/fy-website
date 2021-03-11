@@ -1,12 +1,14 @@
 /** @format */
-import { Button, Dropdown, Menu, Typography } from 'antd';
+import { Button, Menu, Typography } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
-import { CloudUploadOutlined, SettingOutlined } from '@ant-design/icons';
+import dayjs, { Dayjs } from 'dayjs';
+import { CloudUploadOutlined } from '@ant-design/icons';
 import { ArticleStatus } from '../../../core/constant/article';
 import ArticlesContainer from '../../../core/store/article';
 import { ArticleBase } from '../../../core/types/article';
 import EditMarkdown from '../../../shared/components/Markdown/Edit';
 import { exportFile, selectFile } from '../../../shared/utils/file';
+import SettingBtn from '../../../shared/components/SettingBtn/SettingBtn';
 
 interface ReadViewProps {}
 
@@ -20,9 +22,8 @@ const getInitArticle = (): ArticleBase => {
     };
 };
 
-// todo 导出 同步 存为草稿 发布
 const EditView: React.FC<ReadViewProps> = () => {
-    const { editId, articlesData } = ArticlesContainer.useContainer();
+    const { editId, articlesData, addArticle, updateArticle, startUpdate } = ArticlesContainer.useContainer();
 
     const [article, setArticle] = useState<ArticleBase>(getInitArticle());
 
@@ -48,6 +49,34 @@ const EditView: React.FC<ReadViewProps> = () => {
 
     const [isSync, setSync] = useState<boolean>(false);
 
+    const saveDraft = useCallback(async () => {
+        if (editId === -1) {
+            return addArticle({
+                ...article,
+                status: ArticleStatus.DRAFT,
+            });
+        }
+        return updateArticle({
+            ...article,
+            id: editId as number,
+            status: ArticleStatus.DRAFT,
+        });
+    }, [article, editId, addArticle, updateArticle]);
+
+    const publish = useCallback(async () => {
+        if (editId === -1) {
+            return addArticle({
+                ...article,
+                status: ArticleStatus.DRAFT,
+            });
+        }
+        return updateArticle({
+            ...article,
+            id: editId as number,
+            status: ArticleStatus.DRAFT,
+        });
+    }, [article, editId, addArticle, updateArticle]);
+
     useEffect(() => {
         const title = /(#+)(.+)/.exec(article.content);
         const keywords = /(keywords: )(.+)/.exec(article.content);
@@ -59,18 +88,36 @@ const EditView: React.FC<ReadViewProps> = () => {
             };
         });
     }, [article.content]);
+
+    const [nextSyncTime, setNextSyncTime] = useState<Dayjs>(dayjs());
+
+    useEffect(() => {
+        const save = async () => {
+            if (isSync) {
+                if (dayjs().isAfter(nextSyncTime)) {
+                    const res = await saveDraft();
+
+                    setNextSyncTime(dayjs().add(2, 'minute'));
+                    startUpdate(res.id);
+                }
+            }
+        };
+        save();
+    }, [isSync, nextSyncTime, saveDraft, startUpdate]);
+
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, minHeight: 0 }}>
                 <EditMarkdown key="edit" value={article.content} onChange={setContent} />
             </div>
-            <Dropdown
+            <SettingBtn
                 overlay={
                     <Menu
                         style={{ width: 200, textAlign: 'center' }}
                         onClick={({ key }) => {
                             if (key === 'sync') {
                                 setSync((pre) => !pre);
+                                setNextSyncTime(dayjs().add(2, 'minute'));
                             }
 
                             if (key === 'import') {
@@ -87,6 +134,14 @@ const EditView: React.FC<ReadViewProps> = () => {
                                     type: 'md',
                                     name: article.title || ' ',
                                 });
+                            }
+
+                            if (key === 'draft') {
+                                saveDraft();
+                            }
+
+                            if (key === 'publish') {
+                                publish();
                             }
                         }}
                     >
@@ -105,16 +160,11 @@ const EditView: React.FC<ReadViewProps> = () => {
                             </Button>
                         </Menu.Item>
                         <Menu.Divider />
-                        <Menu.Item key="save">存为草稿</Menu.Item>
+                        <Menu.Item key="draft">存为草稿</Menu.Item>
                         <Menu.Item key="publish">发布</Menu.Item>
                     </Menu>
                 }
-            >
-                <SettingOutlined
-                    style={{ position: 'absolute', right: 10, top: -5, fontSize: 24, cursor: 'pointer' }}
-                    className="transparency"
-                />
-            </Dropdown>
+            />
         </div>
     );
 };

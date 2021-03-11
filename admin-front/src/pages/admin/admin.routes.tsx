@@ -1,7 +1,7 @@
 /** @format */
 import React, { lazy, Suspense } from 'react';
 import { Route, Switch, Redirect, useRouteMatch } from 'react-router-dom';
-import HeaderView from '../../core/components/header/Header';
+import HeaderView from '../../core/components/Header/Header';
 
 const Home = lazy(() => import('../home/home.routes'));
 const Article = lazy(() => import('../article/article.routes'));

@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react';
-import Loading from '../../../../core/components/loading/Loading';
+import Loading from '../../../../shared/components/Loading/Loading';
 
 const LoadingView = () => {
     return (

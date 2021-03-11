@@ -26,3 +26,7 @@ export type AddArticleAsyncFunc = AddFunc<ArticleBase>;
 export type UpdateArticleAsyncFunc = UpdateFunc<ArticleBase>;
 
 export type DeleteArticleAsyncFunc = DeleteFunc;
+
+export interface SaveArticleProps extends ArticleBase {
+    id?: number;
+}
