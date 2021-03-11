@@ -1,10 +1,11 @@
 /** @format */
 import { Button, DatePicker, Select } from 'antd';
 import React from 'react';
-import TasksContainer, { QUERYTYPE } from '../../../core/store/task';
+import TasksContainer, { QUERYTYPE, Status } from '../../../core/store/task';
 import SettingBtn from '../../../shared/components/SettingBtn/SettingBtn';
 import EditTask from '../EditTask/EditTask';
 import TasksList from '../TasksList/TasksList';
+import TodoAlert from '../TodoAlert/TodoAlert';
 
 const TaskView = () => {
     const {
@@ -16,6 +17,8 @@ const TaskView = () => {
         setQueryType,
         openAddModal,
 
+        status,
+        setStatus,
         modalId,
     } = TasksContainer.useContainer();
 
@@ -24,6 +27,11 @@ const TaskView = () => {
             <SettingBtn
                 overlay={
                     <div>
+                        <Select value={status} onChange={setStatus}>
+                            <Select.Option value={Status.UNDO}>未开始</Select.Option>
+                            <Select.Option value={Status.DOING}>进行中</Select.Option>
+                            <Select.Option value={Status.DONE}>已完成</Select.Option>
+                        </Select>
                         <Select value={queryType} onChange={setQueryType}>
                             <Select.Option value={QUERYTYPE.BYWEEK}>按周</Select.Option>
                             <Select.Option value={QUERYTYPE.BYMONTH}>按月</Select.Option>
@@ -71,6 +79,7 @@ const TaskView = () => {
             />
 
             <TasksList />
+            <TodoAlert />
             {modalId && <EditTask />}
         </div>
     );

@@ -40,13 +40,22 @@ export class TaskService {
     return this.taskRepository.delete({ id });
   }
 
-  async save({ id, title, beginTime, endTime, award, content }: SaveProps) {
+  async save({
+    id,
+    title,
+    beginTime,
+    endTime,
+    award,
+    content,
+    progress,
+  }: SaveProps) {
     const task = new TaskEntity();
     task.title = title;
     task.beginTime = beginTime;
     task.endTime = endTime;
     task.award = award;
     task.content = content;
+    task.progress = progress;
     if (id) {
       task.id = id;
     }

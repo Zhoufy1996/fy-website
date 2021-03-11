@@ -1,4 +1,4 @@
-import { IsDate, IsInt, IsString } from 'class-validator';
+import { IsDate, IsInt, IsString, Max, Min } from 'class-validator';
 
 class Task {
   @IsDate()
@@ -15,6 +15,11 @@ class Task {
 
   @IsString()
   content: string;
+
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  progess: number;
 }
 
 export class AddDto extends Task {}

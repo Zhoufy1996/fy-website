@@ -1,6 +1,6 @@
 /** @format */
 import React, { useMemo } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, DatePicker, InputNumber } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import TasksContainer from '../../../core/store/task';
 import { TaskBase } from '../../../core/types/task';
@@ -61,14 +61,20 @@ const EditTask = () => {
             destroyOnClose
         >
             <Form form={form} initialValues={initialValue} {...layout}>
+                <Form.Item label="开始时间" name="beginTime">
+                    <DatePicker showTime />
+                </Form.Item>
+                <Form.Item label="结束时间" name="beginTime">
+                    <DatePicker showTime />
+                </Form.Item>
                 <Form.Item label="标题" name="title">
                     <Input />
                 </Form.Item>
                 <Form.Item label="内容" name="content">
                     <Input.TextArea />
                 </Form.Item>
-                <Form.Item label="关键词" name="keywords">
-                    <Input />
+                <Form.Item label="奖励" name="award">
+                    <InputNumber />
                 </Form.Item>
             </Form>
         </Modal>

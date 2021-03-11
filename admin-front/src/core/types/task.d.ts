@@ -8,6 +8,7 @@ export interface TaskBase {
     content: string;
     beginTime: Date;
     endTime: Date;
+    progress: number;
 }
 
 export type Task = TaskBase & DataBase;

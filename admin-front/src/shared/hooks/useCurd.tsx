@@ -21,6 +21,10 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
 
     const [sortIds, setSortIds] = useState<SortIds>([]);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [spinning, setSpinning] = useState<boolean>(false);
+
     // -1新增 >0编辑 null无动作
     // 统一使用id
     const [editId, setEditId] = useState<number | null>(null);
@@ -38,7 +42,9 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
     }, []);
 
     const findDataSource = useCallback(async () => {
+        setSpinning(true);
         const [resData, resSortIds] = await Promise.all([findAllAsync({}), findSortIdsAsync(sortName)]);
+        setSpinning(false);
 
         setDataSource(transformArrToObj(resData));
         setSortIds(resSortIds);
@@ -46,8 +52,9 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
 
     const addData = useCallback(
         async (data: T) => {
+            setLoading(true);
             const res = await addAsync(data);
-
+            setLoading(false);
             setDataSource((pre) => {
                 return {
                     ...pre,
@@ -64,7 +71,9 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
 
     const updateData = useCallback(
         async (data: T & { id: number }) => {
+            setLoading(true);
             const res = await updateAsync(data);
+            setLoading(false);
             setDataSource((pre) => {
                 return {
                     ...pre,
@@ -78,7 +87,9 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
 
     const deleteData = useCallback(
         async (id: number) => {
+            setLoading(true);
             await deleteAsync({ id });
+            setLoading(false);
             await findDataSource();
         },
         [deleteAsync, findDataSource]
@@ -97,6 +108,9 @@ const useCurd = <T,>({ findAllAsync, addAsync, updateAsync, deleteAsync, sortNam
         addData,
         updateData,
         deleteData,
+
+        loading,
+        spinning,
     };
 };
 

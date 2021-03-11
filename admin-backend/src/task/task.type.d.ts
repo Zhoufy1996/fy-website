@@ -8,6 +8,8 @@ export interface AddProps {
   title: string;
 
   content: string;
+
+  progress: number;
 }
 
 export interface UpdateProps extends AddProps {

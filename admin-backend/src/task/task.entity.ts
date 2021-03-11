@@ -29,4 +29,7 @@ export class TaskEntity extends BaseEntity {
     type: 'varchar',
   })
   content: string;
+
+  @Column()
+  progress: number;
 }
