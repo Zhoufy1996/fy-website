@@ -1,7 +1,7 @@
 /** @format */
 import { Button, DatePicker, Select } from 'antd';
 import React from 'react';
-import TasksContainer, { QUERYTYPE, Status } from '../../../core/store/task';
+import TasksContainer, { QUERYTYPE, statusList } from '../../../core/store/task';
 import SettingBtn from '../../../shared/components/SettingBtn/SettingBtn';
 import EditTask from '../EditTask/EditTask';
 import TasksList from '../TasksList/TasksList';
@@ -28,9 +28,9 @@ const TaskView = () => {
                 overlay={
                     <div>
                         <Select value={status} onChange={setStatus}>
-                            <Select.Option value={Status.UNDO}>未开始</Select.Option>
-                            <Select.Option value={Status.DOING}>进行中</Select.Option>
-                            <Select.Option value={Status.DONE}>已完成</Select.Option>
+                            {statusList.map((taskStatus) => {
+                                return <Select.Option value={taskStatus.value}>{taskStatus.name}</Select.Option>;
+                            })}
                         </Select>
                         <Select value={queryType} onChange={setQueryType}>
                             <Select.Option value={QUERYTYPE.BYWEEK}>按周</Select.Option>

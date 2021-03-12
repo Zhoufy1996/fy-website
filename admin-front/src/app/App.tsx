@@ -8,7 +8,7 @@ import '../assets/styles/index.less';
 import AuthContainer from '../core/store/auth';
 import ScrollToTop from '../shared/components/ScrollToTop/ScrollToTop';
 import AppRoutes from './app.routes';
-import Store from '../core/store/component';
+import Store from '../core/store/app';
 
 const VerifyToken = ({ children }: { children: JSX.Element[] }) => {
     const [isInit, setInit] = useState<boolean>(false);

@@ -1,17 +1,27 @@
 /** @format */
 import React from 'react';
-import { Button, Menu } from 'antd';
+import { Button, Menu, Switch } from 'antd';
 import { Link, useRouteMatch } from 'react-router-dom';
 import ArticlesContainer from '../../../core/store/article';
 
 const ArticleMenu = () => {
-    const { setMode, articleId } = ArticlesContainer.useContainer();
+    const { setMode, articleId, mode } = ArticlesContainer.useContainer();
 
     const match = useRouteMatch();
 
     const { articlesData, articlesSortIds } = ArticlesContainer.useContainer();
     return (
         <>
+            <div>
+                <Switch
+                    checkedChildren="只读"
+                    unCheckedChildren="编辑"
+                    checked={mode === 'read'}
+                    onChange={() => setMode((pre) => (pre === 'read' ? 'edit' : 'read'))}
+                    disabled={articleId === 0}
+                />
+            </div>
+
             <Menu
                 selectedKeys={[String(articleId)]}
                 style={{ flex: 1, overflow: 'auto' }}

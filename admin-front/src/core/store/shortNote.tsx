@@ -24,6 +24,8 @@ const useShortNotes = () => {
         addData,
         updateData,
         deleteData,
+
+        loading,
     } = useCurd<ShortNoteBase>({
         findAllAsync: findShortNotesAsync,
         addAsync: addShortNoteAsync,
@@ -42,6 +44,8 @@ const useShortNotes = () => {
         addShortNote: addData,
         updateShortNote: updateData,
         deleteShortNote: deleteData,
+
+        loading,
     };
 };
 

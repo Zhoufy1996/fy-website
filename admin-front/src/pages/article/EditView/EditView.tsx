@@ -1,5 +1,5 @@
 /** @format */
-import { Button, Menu, Typography } from 'antd';
+import { Button, Menu, message, Typography } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CloudUploadOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import EditMarkdown from '../../../shared/components/Markdown/Edit';
 import { exportFile, selectFile } from '../../../shared/utils/file';
 import SettingBtn from '../../../shared/components/SettingBtn/SettingBtn';
 import useSyncData from '../../../shared/hooks/useSyncData';
+import { DataBase } from '../../../core/types/common';
 
 interface ReadViewProps {}
 
@@ -23,8 +24,36 @@ const getInitArticle = (): ArticleBase => {
     };
 };
 
+const getTitle = (content: string) => {
+    const pattern = /(#+)(.+)/.exec(content);
+    return (pattern && pattern[2] && pattern[2].trim()) || '';
+};
+
+const getKeywords = (content: string) => {
+    const pattern = /(keywords: )(.+)/.exec(content);
+    return (pattern && pattern[2] && pattern[2].split(' ')) || [];
+};
+
+const handleContentToArticle = (content: string, status: ArticleStatus): ArticleBase => {
+    return {
+        title: getTitle(content),
+        subTitle: '',
+        content,
+        keywords: getKeywords(content),
+        status,
+    };
+};
+
+enum MenuItemKey {
+    IMPORT = 'import',
+    EXPORT = 'export ',
+    SYNC = 'sync',
+    DRAFT = 'draft',
+    PUBLISH = 'publish',
+}
+
 const EditView: React.FC<ReadViewProps> = () => {
-    const { articlesData, addArticle, updateArticle, startUpdate, articleId } = ArticlesContainer.useContainer();
+    const { articlesData, addArticle, updateArticle, articleId } = ArticlesContainer.useContainer();
     const [article, setArticle] = useState<ArticleBase>(getInitArticle());
     const history = useHistory();
 
@@ -43,33 +72,25 @@ const EditView: React.FC<ReadViewProps> = () => {
         });
     }, []);
 
-    const saveDraft = useCallback(async () => {
-        if (articleId === 0) {
-            return addArticle({
-                ...article,
-                status: ArticleStatus.DRAFT,
-            });
-        }
-        return updateArticle({
-            ...article,
-            id: articleId as number,
-            status: ArticleStatus.DRAFT,
-        });
-    }, [article, articleId, addArticle, updateArticle]);
-
-    const publish = useCallback(async () => {
-        if (articleId === 0) {
-            return addArticle({
-                ...article,
-                status: ArticleStatus.PUBLISHED,
-            });
-        }
-        return updateArticle({
-            ...article,
-            id: articleId as number,
-            status: ArticleStatus.PUBLISHED,
-        });
-    }, [article, articleId, addArticle, updateArticle]);
+    const save = useCallback(
+        async (status: ArticleStatus) => {
+            let res: ArticleBase & DataBase;
+            if (articleId === 0) {
+                res = await addArticle(handleContentToArticle(article.content, status));
+            } else {
+                res = await updateArticle({
+                    id: articleId,
+                    ...handleContentToArticle(article.content, status),
+                });
+            }
+            setArticle(res);
+            message.success('操作成功');
+            if (res.id !== articleId) {
+                history.push(`/article/${res.id}`);
+            }
+        },
+        [articleId, article, history, addArticle, updateArticle]
+    );
 
     // 同步
     const [isSync, setSync] = useState<boolean>(false);
@@ -77,32 +98,14 @@ const EditView: React.FC<ReadViewProps> = () => {
     const syncSave = useCallback(async () => {
         if (isSync) {
             try {
-                const res = await saveDraft();
-
-                startUpdate(res.id);
-                if (res.id !== articleId) {
-                    history.push(`/article/${res.id}`);
-                }
+                await save(ArticleStatus.DRAFT);
             } catch (e) {
                 setSync(false);
             }
         }
-    }, [isSync, saveDraft, startUpdate, history, articleId]);
+    }, [isSync, save]);
 
     useSyncData({ delay: 1000, callback: syncSave });
-
-    // 提取标题和关键词
-    useEffect(() => {
-        const title = /(#+)(.+)/.exec(article.content);
-        const keywords = /(keywords: )(.+)/.exec(article.content);
-        setArticle((pre) => {
-            return {
-                ...pre,
-                title: (title && title[2] && title[2].trim()) || '',
-                keywords: (keywords && keywords[2] && keywords[2].split(' ')) || [],
-            };
-        });
-    }, [article.content]);
 
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -113,12 +116,13 @@ const EditView: React.FC<ReadViewProps> = () => {
                 overlay={
                     <Menu
                         style={{ width: 200, textAlign: 'center' }}
-                        onClick={async ({ key }) => {
-                            if (key === 'sync') {
+                        onClick={async ({ key }: { key: React.Key }) => {
+                            const itemKey = key as MenuItemKey;
+                            if (itemKey === MenuItemKey.SYNC) {
                                 setSync((pre) => !pre);
                             }
 
-                            if (key === 'import') {
+                            if (itemKey === MenuItemKey.IMPORT) {
                                 selectFile({
                                     accept: ['.md'],
                                 }).then((res) => {
@@ -126,7 +130,7 @@ const EditView: React.FC<ReadViewProps> = () => {
                                 });
                             }
 
-                            if (key === 'export') {
+                            if (itemKey === MenuItemKey.EXPORT) {
                                 exportFile({
                                     fileContent: article.content,
                                     type: 'md',
@@ -134,16 +138,12 @@ const EditView: React.FC<ReadViewProps> = () => {
                                 });
                             }
 
-                            if (key === 'draft') {
-                                const res = await saveDraft();
-                                setArticle(res);
-                                history.push(`/article/${res.id}`);
+                            if (itemKey === MenuItemKey.DRAFT) {
+                                await save(ArticleStatus.DRAFT);
                             }
 
-                            if (key === 'publish') {
-                                const res = await publish();
-                                setArticle(res);
-                                history.push(`/article/${res.id}`);
+                            if (itemKey === MenuItemKey.PUBLISH) {
+                                await save(ArticleStatus.PUBLISHED);
                             }
                         }}
                     >
@@ -153,17 +153,17 @@ const EditView: React.FC<ReadViewProps> = () => {
                             </Typography.Text>
                         </Menu.Item>
                         <Menu.Divider />
-                        <Menu.Item key="import">导入</Menu.Item>
-                        <Menu.Item key="export">导出</Menu.Item>
+                        <Menu.Item key={MenuItemKey.IMPORT}>导入</Menu.Item>
+                        <Menu.Item key={MenuItemKey.EXPORT}>导出</Menu.Item>
                         <Menu.Divider />
-                        <Menu.Item key="sync">
+                        <Menu.Item key={MenuItemKey.SYNC}>
                             <Button disabled={articleId === 0} shape="circle" type={isSync ? 'primary' : 'default'}>
                                 <CloudUploadOutlined />
                             </Button>
                         </Menu.Item>
                         <Menu.Divider />
-                        <Menu.Item key="draft">存为草稿</Menu.Item>
-                        <Menu.Item key="publish">发布</Menu.Item>
+                        <Menu.Item key={MenuItemKey.DRAFT}>存为草稿</Menu.Item>
+                        <Menu.Item key={MenuItemKey.PUBLISH}>发布</Menu.Item>
                     </Menu>
                 }
             />

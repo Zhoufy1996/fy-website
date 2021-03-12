@@ -1,7 +1,6 @@
 /** @format */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import 'draft-js/dist/Draft.css';
 import ReadMarkdown from './Read';
 import styles from './Edit.less';
 import useMove from '../../hooks/useMove';
@@ -22,15 +21,6 @@ interface DProps {
  *
  */
 const EditMarkdown: React.FC<DProps> = ({ value = '', onChange = () => {} }) => {
-    // const { value, editorState, onEditorChange, handleChangeValue } = useEditor({
-    //     defaultValue,
-    //     onChange,
-    // });
-
-    // useEffect(() => {
-    //     handleChangeValue(defaultValue);
-    // }, [handleChangeValue, defaultValue]);
-
     const { ref: rootRef, width } = useRect<HTMLDivElement>();
 
     const [writeWidth, setWriteWidth] = useState<number>(0);

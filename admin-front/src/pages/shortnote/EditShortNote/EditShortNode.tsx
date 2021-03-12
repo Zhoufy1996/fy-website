@@ -1,5 +1,5 @@
 /** @format */
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Button, message } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import React, { useMemo } from 'react';
 import ShortNotesContainer from '../../../core/store/shortNote';
@@ -13,7 +13,14 @@ const layout = {
 // https://github.com/ant-design/ant-design/issues/4165
 // https://github.com/ant-design/ant-design/issues/21334
 const EditShortNode = () => {
-    const { modalId, shortNotesData, closeModal, addShortNote, updateShortNote } = ShortNotesContainer.useContainer();
+    const {
+        modalId,
+        shortNotesData,
+        closeModal,
+        addShortNote,
+        updateShortNote,
+        loading,
+    } = ShortNotesContainer.useContainer();
     const [form] = useForm();
 
     const handleOk = () => {
@@ -32,6 +39,7 @@ const EditShortNode = () => {
                 });
                 closeModal();
             }
+            message.success('操作成功');
         });
     };
 
@@ -55,10 +63,17 @@ const EditShortNode = () => {
             title={modalId === -1 ? '新增' : `编辑`}
             onOk={handleOk}
             onCancel={closeModal}
+            maskClosable={false}
             visible
             closable
             destroyOnClose
             key="edit"
+            footer={[
+                <Button onClick={handleOk} loading={loading}>
+                    确定
+                </Button>,
+                <Button onClick={closeModal}>取消</Button>,
+            ]}
         >
             <Form form={form} initialValues={initialValue} {...layout}>
                 <Form.Item label="标题" name="title">

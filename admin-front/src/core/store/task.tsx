@@ -15,11 +15,31 @@ export enum QUERYTYPE {
     BYCUSTOM = 'bycustom',
 }
 
-export enum Status {
-    UNDO = 'undo',
-    DOING = 'doing',
-    DONE = 'done',
+enum TaskStatus {
+    UNDO = 0,
+    DOING = 50,
+    DONE = 100,
 }
+
+interface Status {
+    value: TaskStatus;
+    name: string;
+}
+
+export const statusList: Status[] = [
+    {
+        value: TaskStatus.UNDO,
+        name: '未开始',
+    },
+    {
+        value: TaskStatus.DOING,
+        name: '进行中',
+    },
+    {
+        value: TaskStatus.DONE,
+        name: '已完成',
+    },
+];
 
 // === 0 相等
 // > 0 左边大
@@ -44,6 +64,8 @@ const useTasks = () => {
         addData,
         updateData,
         deleteData,
+
+        loading,
     } = useCurd<TaskBase>({
         findAllAsync: findTasksAsync,
         addAsync: addTaskAsync,
@@ -54,7 +76,7 @@ const useTasks = () => {
 
     const [beginTime, setBeginTime] = useState<Moment | null>(null);
     const [endTime, setEndTime] = useState<Moment | null>(null);
-    const [status, setStatus] = useState<Status>(Status.UNDO);
+    const [status, setStatus] = useState<TaskStatus>(TaskStatus.UNDO);
 
     const [queryType, setQueryType] = useState<QUERYTYPE>(QUERYTYPE.BYWEEK);
 
@@ -63,17 +85,7 @@ const useTasks = () => {
             .filter((id) => {
                 const item = dataSource[id];
                 if (item) {
-                    if (status === Status.UNDO) {
-                        return item.progress === 0;
-                    }
-
-                    if (status === Status.DOING) {
-                        return item.progress > 0 && item.progress < 100;
-                    }
-
-                    if (status === Status.DONE) {
-                        return item.progress === 100;
-                    }
+                    return item.progress === status;
                 }
                 return false;
             })
@@ -127,6 +139,8 @@ const useTasks = () => {
         setQueryType,
         status,
         setStatus,
+
+        loading,
     };
 };
 
